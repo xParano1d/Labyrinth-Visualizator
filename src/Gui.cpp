@@ -6,13 +6,11 @@
 using namespace std;
 namespace fs = std::filesystem;
 
-Rectangle Gui::LeftContext = { 0.0f, 0.0f, 0.0f, 0.0f };
-Rectangle Gui::CenterContext = { 0.0f, 0.0f, 0.0f, 0.0f };
-Rectangle Gui::RightContext = { 0.0f, 0.0f, 0.0f, 0.0f };
+// Button b;
 
-void Gui::Display(){
-    float screenWidth = GetScreenWidth();
-    float screenHeight = GetScreenHeight();
+void Gui::Init() {
+    screenWidth = GetScreenWidth();
+    screenHeight = GetScreenHeight();
     
     //Boxes settings
     float offsetX = screenWidth * 0.01;         // x4 on width
@@ -23,23 +21,64 @@ void Gui::Display(){
     
     //Left Box
     LeftContext = {offsetX, offsetY, smallBoxWidth, boxHeight};
-    DrawRectangleLinesEx(LeftContext, 2, WHITE);
-    //todo topText, generateButton, "radio" checklist of algorythms
-    DrawText("Generation:", offsetX * 2, offsetY * 2, offsetX*2, WHITE);
-
-    string path = "./src/gen";
-    for (const auto & entry : fs::directory_iterator(path)){
-        string filename = entry.path().filename().string();
-        filename = filename.substr(0, filename.size() - 4);
-
-        //todo vector of buttons resize another loop diplay names n shit 
-    }
     //Center Box
     CenterContext = {2 * offsetX + smallBoxWidth, offsetY, bigBoxWidth, boxHeight};
-    DrawRectangleLinesEx(CenterContext, 2, WHITE);
-
     //Right Box
     RightContext = {screenWidth - (smallBoxWidth + offsetX), offsetY, smallBoxWidth, boxHeight};
+
+    this->buttons.resize(1);
+    this->buttons[0] = Button{offsetX * 2, offsetY * 4, smallBoxWidth-offsetX, offsetY*3,"JAPIERDOLE"};;
+}
+
+void Gui::Display() {
+    
+    DrawRectangleLinesEx(LeftContext, 2, WHITE);
+    //todo topText, generateButton, "radio" checklist of algorythms
+    // DrawText("Generation:", offsetX * 2, offsetY * 2, offsetX*2, WHITE);
+
+    // string path = "./src/gen";
+    // for (const auto & entry : fs::directory_iterator(path)){
+    //     string filename = entry.path().filename().string();
+    //     filename = filename.substr(0, filename.size() - 4);
+
+    //     //todo vector of buttons resize another loop diplay names n shit 
+    // }
+
+    
+    // if(this->buttons[0].IsClicked()){
+    //     this->s++;
+    // }
+    
+    // switch (this->s){
+    //     case 1:
+    //         this->buttons[0].ChangeColor(RED, WHITE);
+    //         break;
+    //     case 2:
+    //         this->buttons[0].ChangeColor(GREEN, WHITE);
+    //         break;
+    //     default:
+    //         if(this->s ==3){
+    //             this->s = 0;
+    //             this->buttons[0].ChangeColor(BLUE, WHITE);
+    //         }
+    //         break;
+    // }
+
+    if(this->buttons[0].IsHovered()){
+        this->buttons[0].ChangeColor(WHITE, BLACK);
+    }else{
+        this->buttons[0].ChangeColor(GREEN, WHITE);
+    }
+    
+    this->buttons[0].Display();
+
+
+    DrawRectangleLinesEx(CenterContext, 2, WHITE);
+
+
+
+
+    
     DrawRectangleLinesEx(RightContext, 2, WHITE);
 }
 
@@ -79,4 +118,18 @@ Vector2 Gui::GetRectArea(char c){
     return point;
 }
 
-
+float Gui::GetRectPosX(char c) {
+    float x;
+    switch (c){
+    case 'l':
+        x = this->LeftContext.x;
+        break;
+    case 'c':
+        x = this->CenterContext.x;
+        break;
+    case 'r':
+        x = this->RightContext.x;
+        break;
+    }
+    return x;
+}

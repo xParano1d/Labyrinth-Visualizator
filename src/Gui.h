@@ -1,31 +1,52 @@
 #include <raylib.h>
+#include <vector>
+using std::vector;
 class Gui {
     private:
-        static Rectangle LeftContext;
-        static Rectangle CenterContext;
-        static Rectangle RightContext;
+        Rectangle LeftContext;
+        Rectangle CenterContext;
+        Rectangle RightContext;
         struct Button{
             float posX;
             float posY;
             float width;
             float height;
             const char *text;
-            Color buttonColor;
-            Color textColor;
+            Color buttonColor = BLUE;
+            Color textColor = WHITE;
             void Display(){
-                DrawRectangleRounded({posX, posY, width, height}, 2, 2, buttonColor);
-                DrawText(text, posX + width / 2, posY + height / 2, 10, textColor);
+                DrawRectangleRounded({posX, posY, width, height}, 0.3, 2, buttonColor);
+                DrawText(text, posX+(width-(TextLength(text)*(width*0.1f))git rebase -i HEAD~3), posY+height*0.3f, width*0.1f, textColor);
             }
             void ChangeColor(Color buttonC, Color textC){
                 buttonColor = buttonC;
                 textColor = textC;
             }
+            bool IsHovered(){
+                if((GetMouseX()>posX && GetMouseX()<posX+width) && (GetMouseY()>posY && GetMouseY()<posY+height)){
+                        return true;
+                }else{
+                    return false;
+                }
+            }
+            bool IsClicked(){
+                if(IsHovered()){
+                    if(IsMouseButtonPressed(0) || IsMouseButtonPressed(1)){
+                        return true;
+                    }
+                }
+                return false;
+            }
         };
-        
+        vector<Button> buttons;
+        int s=0;
     public:
-        static void Display();
+        float screenWidth;
+        float screenHeight;
+        void Init();
+        void Display();
         void ChangeRectPosition(char c, float x, float y);
         Vector2 GetRectArea(char c);
-        // float GetRectPosX(char c[1]);
-        // float GetRectPosY(char c[1]);
+        float GetRectPosX(char c);
+        // float GetRectPosY(char c);
 };

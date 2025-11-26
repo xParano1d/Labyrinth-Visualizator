@@ -13,20 +13,23 @@ int main() {
 
     float aspectRatio = screenWidth / screenHeight;
 
-    Grid g;
+    Grid grid;
+    Gui gui;
 
     InitWindow(screenWidth, screenHeight, "Labyrinths Visualization");
-    SetTargetFPS(1);
+    SetTargetFPS(60);
+
+    gui.Init();
 
     while (!WindowShouldClose()) {
         BeginDrawing();
         
         ClearBackground(BLACK);
         
-        Gui::Display();
+        gui.Display();
 
-        g.Create(60,60);
-        g.Display(centerX, centerY, centerX, centerX/aspectRatio);
+        grid.Create(60,60);
+        grid.Display(centerX, centerY, centerX, centerX/aspectRatio);
 
 
         DrawText("Prosze polaczycv sie z nigga AI", screenWidth/3+10, 13, 20, WHITE); // zapytanie o polaczenie z nigga ai
