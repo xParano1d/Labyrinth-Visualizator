@@ -16,22 +16,22 @@ int main() {
 
     float aspectRatio = screenWidth / screenHeight;
 
-    Grid maze;
+    Grid grid;
     Gui gui;
 
     InitWindow(screenWidth, screenHeight, "Labyrinths Visualization");
     SetTargetFPS(60);
 
     gui.Init();
-    maze.Create(60,60); //? Size of grid
+    grid.Create(60,60); //? Size of grid
 
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(BLACK);
         
-        switch (gui.Handle()){
+        switch (gui.GenHandle()){
             case (Gui::Algorithm::RecursiveBacktrack):
-                RecursiveBacktrack::Generate(0, 0, maze.grid);
+                RecursiveBacktrack::Generate(0, 0, grid);
                 break;
             case (Gui::Algorithm::HuntNKill):
                 cout << "HELLOOOO" << endl;
@@ -50,7 +50,7 @@ int main() {
 
 
 
-        maze.Display(centerX, centerY, centerX, centerX/aspectRatio);
+        grid.Display(centerX, centerY, centerX, centerX/aspectRatio);
 
         DrawText("Prosze polaczycv sie z nigga AI", screenWidth/3+10, 13, 20, GREEN); //! zapytanie o polaczenie z nigga ai
 

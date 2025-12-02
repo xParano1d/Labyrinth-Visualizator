@@ -19,7 +19,7 @@ class Gui {
         float screenWidth;
         float screenHeight;
         void Init();
-        Algorithm Handle();
+        Algorithm GenHandle();
         void Display();
         void ChangeRectPosition(Context c, float x, float y);
         Vector2 GetRectArea(Context c);

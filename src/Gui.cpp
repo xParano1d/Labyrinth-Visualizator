@@ -39,7 +39,7 @@ void Gui::Init() {
     RightContext = {screenWidth - (smallBoxWidth + offsetX), offsetY, smallBoxWidth, boxHeight};
 }
 
-Gui::Algorithm Gui::Handle() {
+Gui::Algorithm Gui::GenHandle() {
     
     if(StartGenButton.IsClicked()){
         return ChosenGen.alg;
