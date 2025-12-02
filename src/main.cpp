@@ -1,9 +1,9 @@
 #include <raylib.h>
 #include "Gui.h"
 #include "Grid.h"
+#include "./gen/RecursiveBacktrack.h"
 
 #include <iostream>
-#include "RecursiveBacktrack.h"
 using namespace std;
 
 int main() {
