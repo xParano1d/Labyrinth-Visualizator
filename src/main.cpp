@@ -31,7 +31,7 @@ int main() {
         
         switch (gui.GenHandle()){
             case (Gui::Algorithm::RecursiveBacktrack):
-                RecursiveBacktrack::Generate(0, 0, grid);
+                // RecursiveBacktrack::Generate(0, 0, grid);
                 break;
             case (Gui::Algorithm::HuntNKill):
                 cout << "HELLOOOO" << endl;
