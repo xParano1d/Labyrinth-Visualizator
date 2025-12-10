@@ -17,6 +17,8 @@ class Gui {
             Kruskal
         };
         Algorithm genState;
+        double algTime = 0;
+        int iterations = 0;
 
         float screenWidth;
         float screenHeight;
@@ -35,6 +37,7 @@ class Gui {
         Rectangle LeftContext;
         Rectangle CenterContext;
         Rectangle RightContext;
+        
         struct Button{
             float posX;
             float posY;

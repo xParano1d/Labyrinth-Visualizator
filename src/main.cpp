@@ -24,7 +24,7 @@ constexpr int screenWidth = 1080;
     SetTargetFPS(60);
     SetRandomSeed((unsigned int)time(NULL));
     
-    double time;
+    double delay;
 
     gui.Init();
     grid.Create(gridHeight, gridWidth);
@@ -41,12 +41,14 @@ constexpr int screenWidth = 1080;
             switch(gui.genState){
                 case (Gui::Algorithm::Backtracking):
                     grid.Create(gridHeight, gridWidth);
+
                     Backtracking::Init(0, 0, grid);
 
-                    time = GetTime();
+                    delay = GetTime();
+                    gui.algTime = delay;
+                    
+                    gui.iterations++;
                     gui.readyGen = false;
-
-                    cout << "Backtracking" << endl;
                 break;
                 
                 case (Gui::Algorithm::HuntNKill):
@@ -69,9 +71,11 @@ constexpr int screenWidth = 1080;
 
             switch (gui.genState){
                 case (Gui::Algorithm::Backtracking):
-                    if(GetTime()-time > vSpeed){
+                    if(GetTime()-delay > vSpeed){
                         Backtracking::Generate(grid);
-                        time = GetTime();
+                        gui.algTime = gui.algTime + (GetTime()-delay);
+                        gui.iterations++;
+                        delay = GetTime();
                     }else if(grid.stack.empty()){
                         gui.readyGen = true;
                         gui.genState = Gui::Algorithm::None;
