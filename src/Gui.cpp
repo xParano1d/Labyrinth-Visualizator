@@ -66,6 +66,15 @@ void Gui::Display() {
         }
     }
 
+
+    //Algorithm elapsed time and iterations count display
+    const char* elapsedTime = TextFormat("Time Elapsed: %.2f seconds", algTime);
+    DrawText(elapsedTime, GetRectPosX(LEFT) + offsetX, this->screenHeight-(GetRectPosY(LEFT) + this->offsetY*5), this->screenWidth*0.006, WHITE);
+
+    const char* iterationsCount = TextFormat("Algorithm Step: %d", iterations);
+    DrawText(iterationsCount, GetRectPosX(LEFT) + offsetX, this->screenHeight-(GetRectPosY(LEFT) + this->offsetY*6), this->screenWidth*0.006, WHITE);
+
+
     if(StartGenButton.IsHovered() && genState == None){
         StartGenButton.ChangeColor(RAYWHITE, BLACK);
     }else if(genState!=None){
