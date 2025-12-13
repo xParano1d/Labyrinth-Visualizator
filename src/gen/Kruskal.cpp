@@ -1,61 +1,90 @@
 #include "Kruskal.h"
+#include <iostream>
+using namespace std;
 
 void Kruskal::Init(Grid &maze) {
     //Throw all of the Edges into set
+    // cout << "edges:" << endl;
+    int h = 0;
     for (int i = 0; i < (int)maze.grid.size(); i++){        
         for (int j = 0; j < (int)maze.grid[i].size(); j++){
 
             if(j >= 0 && j < (int)maze.grid[i].size()-1){     //Right Edge
-                edgeList.push_back({{i, j}, Grid::Position::RIGHT});
+                edgeList.push_back({{i, j}, {i, j+1}, Grid::Position::RIGHT});
+
+                // cout << "\t" << i << ", " << j <<"  |  "<<  Grid::Position::RIGHT << " -> " << h <<endl;
             }
 
             if(i >= 0 && i < (int)maze.grid.size()-1){        //Bottom Edge
-                edgeList.push_back({{i, j}, Grid::Position::DOWN});
+                edgeList.push_back({{i, j}, {i+1, j},Grid::Position::DOWN});
+
+                // cout << "\t" << i << ", " << j <<"  |  "<<  Grid::Position::DOWN << " -> " << h <<endl;
             }
 
+            maze.grid[i][j].groupID = h;
+            h++;
         }
     }
 }
 
 void Kruskal::Generate(Grid &maze) {
-    //Select and Remove an edge from the bag at random.
+    //Select and Remove an edge from the list at random.
     int random = GetRandomValue(0, (int)edgeList.size()-1);
-    Edge currentEdge = edgeList[random];
+    Grid::Edge currentEdge = edgeList[random];
 
     edgeList.erase(edgeList.begin()+random);
 
-    int currentRow = currentEdge.posA.row;
-    int currentCol = currentEdge.posA.col;
+    int rowA = currentEdge.posA.row;
+    int colA = currentEdge.posA.col;
 
-    //Remove walls between Cells
-    switch (currentEdge.direction){
-        case Grid::Position::LEFT:
-        break;
+    int rowB = currentEdge.posB.row;
+    int colB = currentEdge.posB.col;
 
-        case Grid::Position::UP:
-        break;
+    //If the two cells belong to different groups
+    if(maze.grid[rowA][colA].groupID != maze.grid[rowB][colB].groupID){
 
-        case Grid::Position::RIGHT:
-            maze.grid[currentRow][currentCol].rightWall = false;
-            maze.grid[currentRow][currentCol+1].leftWall = false;
+        //Merge Cells groups
+        maze.ChangeGroupsID(maze.grid[rowB][colB].groupID, maze.grid[rowA][colA].groupID);
 
-            //Mark the Group as visited
-            maze.grid[currentRow][currentCol+1].visited = true;
-            maze.grid[currentRow][currentCol+1].color = {108, 117, 148, 255};
-        break;
+        //Remove walls between Cells
+        switch (currentEdge.direction){
+            case Grid::Position::LEFT:
+            break;
 
-        case Grid::Position::DOWN:
-            maze.grid[currentRow][currentCol].bottomWall = false;
-            maze.grid[currentRow+1][currentCol].topWall = false;
+            case Grid::Position::UP:
+            break;
 
-            //Mark the Group as visited
-            maze.grid[currentRow+1][currentCol].visited = true;
-            maze.grid[currentRow+1][currentCol].color = {108, 117, 148, 255};
-        break;
+            case Grid::Position::RIGHT:
+                maze.grid[rowA][colA].rightWall = false;
+                maze.grid[rowB][colB].leftWall = false;
+            break;
+
+            case Grid::Position::DOWN:
+                    maze.grid[rowA][colA].bottomWall = false;
+                    maze.grid[rowB][colB].topWall = false;
+            break;
+        }
+
+
+        //Mark the Group as visited
+        maze.grid[rowA][colA].visited = true;
+        maze.grid[rowA][colA].color = {108, 117, 148, 255};
+
+        maze.grid[rowB][colB].visited = true;
+        maze.grid[rowB][colB].color = {108, 117, 148, 255};
     }
 
-    //Mark the Group as visited
-    maze.grid[currentRow][currentCol].visited = true;
-    maze.grid[currentRow][currentCol].color = {108, 117, 148, 255};
-
+    //Quick fix for Large Edge List full of same group ID's
+    bool end = true;
+    int sameID = maze.grid[rowA][colA].groupID;
+    for (int i = 0; i < (int)maze.grid.size(); i++){        
+        for (int j = 0; j < (int)maze.grid[i].size(); j++){
+            if(sameID != maze.grid[i][j].groupID){
+                end = false;
+            }
+        }
+    }
+    if(end){
+        edgeList.clear();
+    }
 }

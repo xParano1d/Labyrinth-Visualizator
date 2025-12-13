@@ -16,8 +16,8 @@ TODO:
         Gen:
             ✔ Backtracking (DFS) @done (12/9/2025, 8:00:12 PM)
             ✔ Hunt n' kill @done (12/11/2025, 5:31:01 PM)
-            ☐ Prim
-            ☐ Kruskal
+            ✔ Prim @done (12/13/2025, 6:13:14 PM)
+            ✔ Kruskal @done (12/14/2025, 12:22:27 AM)
             ☐ Eller?
         Solve:
             ☐ Hand on Right Wall

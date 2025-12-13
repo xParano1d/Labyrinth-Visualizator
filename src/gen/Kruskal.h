@@ -3,12 +3,9 @@
 
 class Kruskal {
     private:
-        struct Edge{
-            Grid::CellPosition posA;
-            Grid::Position direction;   //from A to B 
-        };
+        
     public:
-        inline static vector<Edge> edgeList;
+        inline static vector<Grid::Edge> edgeList;
 
         static void Init(Grid& maze);
         static void Generate(Grid& maze);

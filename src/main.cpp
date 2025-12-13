@@ -13,8 +13,8 @@ int main() {
     constexpr int screenHeight = 600;
     int gridWidth = 20;
     int gridHeight = 20;
-    float vSpeed = 100;                   //visualization speed (delay in seconds between iterations)
-    // 0.1 -> fast      5 -> slow
+    float vSpeed = 100;                   //visualization speed 
+    //heighest value -> faster
     vSpeed = 1 / vSpeed;
 
 
@@ -134,7 +134,7 @@ int main() {
                 
                 case (Gui::Algorithm::Kruskal):
                     if(GetTime()-delay > vSpeed){
-                        if(grid.UnvisitedCount()>0){
+                        if(!Kruskal::edgeList.empty()){
                             Kruskal::Generate(grid);
                             gui.iterations++;
                             delay = GetTime();
