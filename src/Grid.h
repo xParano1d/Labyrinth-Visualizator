@@ -35,7 +35,7 @@ class Grid {
         void Display();
 
         void ChangeEveryCellColor(Color c);
-        void HighlightRow(int row, Color c, int time);
+        void HighlightRow(int row, Color c);
 
 
         vector<CellPosition> GetUnvisitedNeighboursPosition(int cellRow, int cellCol);
@@ -47,5 +47,4 @@ class Grid {
         bool highlightRow = false;
         int highlightedRow;
         Color highlightColor;
-        int highlightTime=0;
 };
