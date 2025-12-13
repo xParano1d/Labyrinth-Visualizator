@@ -7,7 +7,7 @@ class Grid {
     public:
         int rows;
         int columns;
-
+        
         struct CellPosition {
             int row;
             int col;
@@ -20,14 +20,24 @@ class Grid {
             RIGHT,
             DOWN
         };
+
+        struct Edge{
+            Grid::CellPosition posA;
+            Grid::CellPosition posB;
+            Grid::Position direction;   //from A to B 
+        };
         
         struct Cell{
             bool rightWall;
             bool leftWall;
             bool topWall;
             bool bottomWall;
+
             Color color;
+
             bool visited = false;
+
+            int groupID = 0; 
         };
         vector<vector<Cell>> grid;
 
@@ -37,6 +47,7 @@ class Grid {
         void ChangeEveryCellColor(Color c);
         void HighlightRow(int row, Color c);
 
+        void ChangeGroupsID(int fromID, int toID);
 
         vector<CellPosition> GetUnvisitedNeighboursPosition(int cellRow, int cellCol);
         vector<Position> UnvisitedNeighbours(int cellRow, int cellCol);

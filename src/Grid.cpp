@@ -39,6 +39,16 @@ void Grid::HighlightRow(int row, Color c) {
     highlightColor.a = 120;
 }
 
+void Grid::ChangeGroupsID(int fromID, int toID) {
+    for (int i = 0; i < rows; i++){
+        for (int j = 0; j < columns; j++){
+            if(grid[i][j].groupID == fromID){
+                grid[i][j].groupID = toID;
+            }
+        }
+    }
+}
+
 void Grid::Display() {
     float centerX = GetScreenWidth() / 2;
     float centerY = GetScreenHeight() / 2;
