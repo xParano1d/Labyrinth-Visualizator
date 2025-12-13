@@ -1,12 +1,11 @@
+#include <iostream>
 #include <raylib.h>
 #include "Gui.h"
-#include "Grid.h"
 #include "./gen/Backtracking.h"
 #include "./gen/HuntnKill.h"
 #include "./gen/Prim.h"
+#include "./gen/Kruskal.h"
 
-#include <iostream>
-using namespace std;
 
 int main() {
     //settings
@@ -14,9 +13,9 @@ int main() {
     constexpr int screenHeight = 600;
     int gridWidth = 20;
     int gridHeight = 20;
-    float vSpeed = 1;                   //visualization speed (delay in seconds between iterations)
+    float vSpeed = 100;                   //visualization speed (delay in seconds between iterations)
     // 0.1 -> fast      5 -> slow
-    vSpeed = vSpeed * 0.1;
+    vSpeed = 1 / vSpeed;
 
 
     Grid grid;
@@ -62,8 +61,11 @@ int main() {
                     gui.readyGen = false;
                 break;
                 
-                case (Gui::Algorithm::Kruskal):
-                    cout << "time: "<< GetTime() << endl;
+                case (Gui::Algorithm::Kruskal): //Randomized* Kruskal
+                    grid.Create(gridHeight, gridWidth);
+                    Kruskal::Init(grid);
+                    gui.iterations--;
+                    gui.readyGen = false;
                 break;
                 
                 case (Gui::Algorithm::None):
@@ -72,6 +74,7 @@ int main() {
 
             if(!gui.readyGen){
                 gui.algTime = 0;
+                gui.iterations = 0;
                 gui.iterations++;
                 delay = GetTime();
                 genTime = GetTime();
@@ -130,8 +133,19 @@ int main() {
                 break;
                 
                 case (Gui::Algorithm::Kruskal):
-
-                    
+                    if(GetTime()-delay > vSpeed){
+                        if(grid.UnvisitedCount()>0){
+                            Kruskal::Generate(grid);
+                            gui.iterations++;
+                            delay = GetTime();
+                        }else{
+                            if(GetTime()-delay > vSpeed*2){
+                                grid.ChangeEveryCellColor(WHITE);
+                                gui.genState = Gui::Algorithm::None;
+                                gui.readyGen = true;
+                            }
+                        }
+                    }
                 break;
                 
                 case (Gui::Algorithm::None):

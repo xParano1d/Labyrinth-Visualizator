@@ -26,7 +26,7 @@ void Grid::ChangeEveryCellColor(Color c) {
     }
 }
 
-void Grid::HighlightRow(int row, Color c, int time) {
+void Grid::HighlightRow(int row, Color c) {
     highlightRow = true;
 
     if(row <= 0){
@@ -37,8 +37,6 @@ void Grid::HighlightRow(int row, Color c, int time) {
     
     highlightColor = c;
     highlightColor.a = 120;
-
-    highlightTime = time;
 }
 
 void Grid::Display() {
@@ -84,15 +82,6 @@ void Grid::Display() {
         posY = posY + offsetY;
     }
     
-    //Row highlighting
-    if(highlightRow){
-        if(highlightTime!=0){
-            DrawRectangle(startPosX, highlightedRow*offsetY, offsetX*columns, offsetY, highlightColor);
-            highlightTime--;
-        }else{
-            highlightRow = false;
-        }
-    }
 }
 
 vector<Grid::CellPosition> Grid::GetUnvisitedNeighboursPosition(int cellRow, int cellCol) {
@@ -122,12 +111,12 @@ vector<Grid::CellPosition> Grid::GetUnvisitedNeighboursPosition(int cellRow, int
 
 vector<Grid::Position> Grid::UnvisitedNeighbours(int cellRow, int cellCol) {
     vector<Position> v;
-    if(cellCol > 0 && cellCol < (int)grid[cellRow].size()){     //Left
+    if(cellCol > 0 && cellCol < (int)grid[cellRow].size()){         //Left
         if (!grid[cellRow][cellCol - 1].visited) {
             v.push_back(LEFT);
         }
     }
-    if(cellRow > 0 && cellRow < (int)grid.size()){              //Up
+    if(cellRow > 0 && cellRow < (int)grid.size()){                  //Up
         if(!grid[cellRow-1][cellCol].visited){
             v.push_back(UP);
         }
@@ -147,22 +136,22 @@ vector<Grid::Position> Grid::UnvisitedNeighbours(int cellRow, int cellCol) {
 
 vector<Grid::Position> Grid::VisitedNeighbours(int cellRow, int cellCol) {
     vector<Position> v;
-    if(cellCol > 0 && cellCol < (int)grid[cellRow].size()){     //Left
+    if(cellCol > 0 && cellCol < (int)grid[cellRow].size()){         //Left
         if (grid[cellRow][cellCol - 1].visited) {
             v.push_back(LEFT);
         }
     }
-    if(cellRow > 0 && cellRow < (int)grid.size()){              //Up
+    if(cellRow > 0 && cellRow < (int)grid.size()){                  //Up
         if(grid[cellRow-1][cellCol].visited){
             v.push_back(UP);
         }
     }
-    if(cellCol+1 > 0  && cellCol+1 < (int)grid[cellRow].size()){//Right
+    if(cellCol+1 > 0  && cellCol+1 < (int)grid[cellRow].size()){    //Right
         if(grid[cellRow][cellCol+1].visited){
             v.push_back(RIGHT);
         }
     }
-    if(cellRow+1 > 0 && cellRow+1 < (int)grid.size()){          //Down
+    if(cellRow+1 > 0 && cellRow+1 < (int)grid.size()){              //Down
         if(grid[cellRow+1][cellCol].visited){
             v.push_back(DOWN);
         }
