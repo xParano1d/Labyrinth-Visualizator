@@ -1,6 +1,7 @@
 #include "Grid.h"
 #include <raylib.h>
 
+
 void Grid::Create(int rows, int columns) {
     this->rows = rows;
     this->columns = columns;
@@ -14,8 +15,11 @@ void Grid::Create(int rows, int columns) {
             this->grid[i][j] = Cell{true, true, true, true, {255,0,0,255}};
         }
     }
+
     this->grid[0][0].topWall = false;
     this->grid[rows-1][columns-1].bottomWall = false;
+
+    generated = false;
 }
 
 void Grid::ChangeEveryCellColor(Color c) {
@@ -57,18 +61,17 @@ void Grid::Display() {
     float width = centerX;
     float height = centerX / aspectRatio;
 
-    float posX = centerX - width/2;
-    float posY = centerY - height/2;
-
-
     float offsetX = width / columns;
     float offsetY = height / rows;
-    
+
+
+    float posX = centerX - width/2; 
+    float posY = centerY - height/2;
+
+    float borderThickness = 8;
+    DrawRectangle(posX-borderThickness, posY-borderThickness/aspectRatio, width+2*borderThickness, height+2*(borderThickness/aspectRatio), WHITE); //? Background of a Grid
+
     float startPosX = posX;
-
-
-    DrawRectangle(posX-offsetX/3, posY-offsetY/3, width+offsetX/1.5f, height+offsetY/1.5f, WHITE); //? Background of a Grid
-
     for (int i = 0; i < this->rows; i++){
         for (int j = 0; j < this->columns; j++){
             DrawRectangle(posX, posY, offsetX, offsetY, grid[i][j].color);  //* Background of a Cell

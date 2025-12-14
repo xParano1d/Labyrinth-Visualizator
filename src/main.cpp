@@ -8,14 +8,20 @@
 
 
 int main() {
-    //settings
     constexpr int screenWidth = 1080;
     constexpr int screenHeight = 600;
+
+    //settings
     int gridWidth = 20;
     int gridHeight = 20;
-    float vSpeed = 100;                   //visualization speed 
-    //heighest value -> faster
-    vSpeed = 1 / vSpeed;
+
+    int startingRow = 0;
+    int startingCol = 0;
+
+    float vSpeed = 20;     //visualization speed 
+    vSpeed = 1 / vSpeed;    //heighest value -> faster
+    
+
 
 
     Grid grid;
@@ -28,6 +34,8 @@ int main() {
     
     double delay;
     double genTime;
+    // double solveTime;
+    bool algType;       // true -> Gen  |  false -> solve
 
     gui.Init();
     grid.Create(gridHeight, gridWidth);
@@ -38,64 +46,83 @@ int main() {
         
         gui.Display();
 
-        if(gui.readyGen){
+        if(gui.ready){
 
-            gui.genState = gui.GenHandle();
+            gui.choosenAlgorithm = gui.MainButtonHandler();
 
-            switch(gui.genState){
+            switch(gui.choosenAlgorithm){
                 case (Gui::Algorithm::Backtracking):
                     grid.Create(gridHeight, gridWidth);
-                    Backtracking::Init(0, 0, grid);
-                    gui.readyGen = false;
+                    Backtracking::Init(startingRow, startingCol, grid);
+                    algType = true;
                 break;
                 
                 case (Gui::Algorithm::HuntNKill):
                     grid.Create(gridHeight, gridWidth);
-                    HuntnKill::Init(0, 0, grid);
-                    gui.readyGen = false;
+                    HuntnKill::Init(startingRow, startingCol, grid);
+                    algType = true;
                 break;
                 
                 case (Gui::Algorithm::Prim):
                     grid.Create(gridHeight, gridWidth);
-                    Prim::Init(0, 0, grid);
-                    gui.readyGen = false;
+                    Prim::Init(startingRow, startingCol, grid);
+                    algType = true;
                 break;
                 
                 case (Gui::Algorithm::Kruskal): //Randomized* Kruskal
                     grid.Create(gridHeight, gridWidth);
                     Kruskal::Init(grid);
-                    gui.iterations--;
-                    gui.readyGen = false;
+                    gui.genIterations--;
+                    algType = true;
                 break;
-                
+
+
                 case (Gui::Algorithm::None):
+                break;
+
+
+                case (Gui::Algorithm::HandOnWall):
+
+                break;
+
+                case (Gui::Algorithm::ShortestPath):
+
+                break;
+
+                case (Gui::Algorithm::DeadEndFiller):
+                    std::cout << "test" << std::endl;
                 break;
             }
 
-            if(!gui.readyGen){
-                gui.algTime = 0;
-                gui.iterations = 0;
-                gui.iterations++;
+            if(!gui.ready){
+                if(algType){        //GENERATION
+                    gui.genIterations = 0;
+                    gui.genIterations++;
+
+                    gui.genTime = 0;
+                    genTime = GetTime();
+                }else{              //SOLVING
+                    gui.solveIterations = 0;
+                    gui.solveIterations++;
+
+                    gui.solveTime = 0;
+                    // solveTime = GetTime();
+                }
                 delay = GetTime();
-                genTime = GetTime();
             }
 
         }else{
-            gui.algTime = GetTime() - genTime;
+            gui.genTime = GetTime() - genTime;
             
-            switch (gui.genState){
+            switch (gui.choosenAlgorithm){
                 case (Gui::Algorithm::Backtracking):
                     if(GetTime()-delay > vSpeed){
                         if(!grid.stack.empty()){
                             Backtracking::Generate(grid);
-                            gui.iterations++;
+                            gui.genIterations++;
                             delay = GetTime();
                         }else{
-                            if(GetTime()-delay > vSpeed*2){
-                                grid.ChangeEveryCellColor(WHITE);
-                                gui.genState = Gui::Algorithm::None;
-                                gui.readyGen = true;
-                            }
+                            grid.generated = true;
                         }
                     }
                 break;
@@ -104,14 +131,10 @@ int main() {
                     if(GetTime()-delay > vSpeed){
                         if(grid.UnvisitedCount()>0){
                             HuntnKill::Generate(grid);
-                            gui.iterations++;
+                            gui.genIterations++;
                             delay = GetTime();
                         }else{
-                            if(GetTime()-delay > vSpeed*2){
-                                grid.ChangeEveryCellColor(WHITE);
-                                gui.readyGen = true;
-                                gui.genState = Gui::Algorithm::None;
-                            }
+                            grid.generated = true;
                         }
                     }
                 break;
@@ -120,14 +143,10 @@ int main() {
                     if(GetTime()-delay > vSpeed){
                         if(!Prim::frontierList.empty()){
                             Prim::Generate(grid);
-                            gui.iterations++;
+                            gui.genIterations++;
                             delay = GetTime();
                         }else{
-                            if(GetTime()-delay > vSpeed*2){
-                                grid.ChangeEveryCellColor(WHITE);
-                                gui.readyGen = true;
-                                gui.genState = Gui::Algorithm::None;
-                            }
+                            grid.generated = true;
                         }
                     }
                 break;
@@ -136,28 +155,51 @@ int main() {
                     if(GetTime()-delay > vSpeed){
                         if(!Kruskal::edgeList.empty()){
                             Kruskal::Generate(grid);
-                            gui.iterations++;
+                            gui.genIterations++;
                             delay = GetTime();
                         }else{
-                            if(GetTime()-delay > vSpeed*2){
-                                grid.ChangeEveryCellColor(WHITE);
-                                gui.genState = Gui::Algorithm::None;
-                                gui.readyGen = true;
-                            }
+                            grid.generated = true;
                         }
                     }
                 break;
                 
+
                 case (Gui::Algorithm::None):
                 break;
+
+
+                case (Gui::Algorithm::HandOnWall):
+                    gui.ready = true;
+                    gui.choosenAlgorithm = Gui::Algorithm::None;
+                break;
+
+                case (Gui::Algorithm::ShortestPath):
+                    gui.ready = true;
+                    gui.choosenAlgorithm = Gui::Algorithm::None;
+                break;
+
+                case (Gui::Algorithm::DeadEndFiller):
+                    gui.ready = true;
+                    gui.choosenAlgorithm = Gui::Algorithm::None;
+                break;
+            }
+
+
+            gui.solveReady = grid.generated;
+
+            if(grid.generated){
+                if(GetTime()-delay > vSpeed*2){
+                    grid.ChangeEveryCellColor(WHITE);
+                    gui.ready = true;
+                    gui.choosenAlgorithm = Gui::Algorithm::None;
+                }
             }
         }
-
 
         
         grid.Display();
         
-        DrawText("Prosze polaczycv sie z nigga AI", screenWidth/3+10, 13, 20, BLUE); //! zapytanie o polaczenie z nigga ai
+        DrawText("Prosze polaczycv sie z nigga AI", screenWidth/3+10, 13, 20, GREEN); //! zapytanie o polaczenie z nigga ai
         EndDrawing();
     }
 

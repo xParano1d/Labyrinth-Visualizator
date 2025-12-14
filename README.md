@@ -3,13 +3,13 @@ Raylib C++ simple program for generating and solving labyrinths using different 
 
 TODO:
 
-    Features:
+    Things to implement:
         ✔ step by step algorithms displaying @done (12/9/2025, 10:38:31 PM)
         ☐ Gui Settings (window size, grid size, speed, etc.)
         ✔ Gui Gen time @done (11/11/2025, 7:22:08 PM)
         ✔ Gui Gen iterations @done (11/11/2025, 7:22:12 PM)
-        ☐ Gui Solve time
-        ☐ Gui Solve iterations
+        ✔ Gui Solve time @done (12/14/2025, 8:02:50 PM)
+        ✔ Gui Solve iterations @done (12/14/2025, 8:02:52 PM)
         ☐ save as gif/png
 
     Algorithms:
@@ -24,3 +24,9 @@ TODO:
             ☐ Backtracking
             ☐ Shortest Path
             ☐ Dead End Filler
+
+
+    Issues to fix:
+        ☐ cell walls scaling and overall graphics improvement needed
+        ☐ kruskal highlighting row one time per iteration 
+        ☐ IsHovered() for selected button should have the same color

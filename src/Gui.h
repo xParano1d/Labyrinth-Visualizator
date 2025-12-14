@@ -9,25 +9,37 @@ class Gui {
             RIGHT
         };
     public:
-        enum Algorithm {
-            None,
-            Backtracking,
-            HuntNKill,
-            Prim,
-            Kruskal
-        };
-        Algorithm genState;
-        double algTime = 0;
-        int iterations = 0;
-
         float screenWidth;
         float screenHeight;
 
         void Init();
-        Algorithm GenHandle();
-        bool readyGen=true;
-
         void Display();
+
+        enum Algorithm {
+            //Gen
+            None,
+            Backtracking,
+            HuntNKill,
+            Prim,
+            Kruskal,
+
+            //Solve
+            HandOnWall,
+            ShortestPath,
+            DeadEndFiller
+        };
+        Algorithm choosenAlgorithm;
+
+        double genTime = 0;
+        int genIterations = 0;
+
+        double solveTime = 0;
+        int solveIterations = 0;
+
+        bool ready=true;
+        bool solveReady = false;
+        Algorithm MainButtonHandler();
+
         void ChangeRectPosition(Context c, float x, float y);
         
         Vector2 GetRectArea(Context c);
@@ -38,15 +50,22 @@ class Gui {
         Rectangle CenterContext;
         Rectangle RightContext;
         
+        float offsetX;
+        float offsetY;
+
         struct Button{
             float posX;
             float posY;
             float width;
             float height;
+
             const char *text;
+
             Algorithm alg;
+
             Color buttonColor = BLUE;
             Color textColor = WHITE;
+
             void Display(){
                 DrawRectangleRounded({posX, posY, width, height}, 0.3, 3, buttonColor);
                 float fontSize = height * 0.54f;
@@ -76,6 +95,8 @@ class Gui {
         vector<Button> genButtons;
         Button ChosenGen;
         Button StartGenButton;
-        float offsetX;
-        float offsetY;
+
+        vector<Button> solveButtons;
+        Button ChosenSolve;
+        Button StartSolvingButton;
 };

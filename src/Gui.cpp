@@ -19,43 +19,61 @@ void Gui::Init() {
 
     this->genButtons.resize(4);    //? Number of Buttons for Generation Algorithms
     //Recursive Backtrack
-    this->genButtons[0] = Button{offsetX+4, offsetY * 8, smallBoxWidth-8, offsetY*3,"Backtracking", Backtracking};
+    this->genButtons[0] = Button{GetRectPosX(LEFT)+12, offsetY * 8, smallBoxWidth-24, offsetY*3,"Backtracking", Backtracking};
     //Hunt n' Kill
-    this->genButtons[1] = Button{offsetX+4, offsetY * 11.5f, smallBoxWidth-8, offsetY*3,"Hunt n' Kill", HuntNKill};
+    this->genButtons[1] = Button{GetRectPosX(LEFT)+12, offsetY * 11.5f, smallBoxWidth-24, offsetY*3,"Hunt n' Kill", HuntNKill};
     //Prim
-    this->genButtons[2] = Button{offsetX+4, offsetY * 15, smallBoxWidth-8, offsetY*3,"Prim", Prim};
+    this->genButtons[2] = Button{GetRectPosX(LEFT)+12, offsetY * 15, smallBoxWidth-24, offsetY*3,"Prim", Prim};
     //Kruskal
-    this->genButtons[3] = Button{offsetX+4, offsetY * 18.5f, smallBoxWidth-8, offsetY*3,"Kruskal", Kruskal};
+    this->genButtons[3] = Button{GetRectPosX(LEFT)+12, offsetY * 18.5f, smallBoxWidth-24, offsetY*3,"Kruskal", Kruskal};
 
     //Generate Button
-    this->StartGenButton = {offsetX+4, screenHeight-offsetY*5, smallBoxWidth-8, offsetY*3,"Start Generating"};
+    this->StartGenButton = {GetRectPosX(LEFT)+8, screenHeight-offsetY*5, smallBoxWidth-16, offsetY*3,"Start Generating"};
 
 
 
     //Center Box
     CenterContext = {2 * offsetX + smallBoxWidth, offsetY, bigBoxWidth, boxHeight};
 
+
+
     //Right Box
     RightContext = {screenWidth - (smallBoxWidth + offsetX), offsetY, smallBoxWidth, boxHeight};
+
+    this->solveButtons.resize(3);    //? Number of Buttons for Solve Algorithms
+    //Hand On Wall 
+    this->solveButtons[0] = Button{GetRectPosX(RIGHT)+12, offsetY * 8, smallBoxWidth-24, offsetY*3,"Hand On Wall", HandOnWall};
+    //Shortest Path
+    this->solveButtons[1] = Button{GetRectPosX(RIGHT)+12, offsetY * 11.5f, smallBoxWidth-24, offsetY*3,"Shortest Path", ShortestPath};
+    //DeadEndFiller
+    this->solveButtons[2] = Button{GetRectPosX(RIGHT)+12, offsetY * 15, smallBoxWidth-24, offsetY*3,"Dead End Filler", DeadEndFiller};
+
+    //Generate Button
+    this->StartSolvingButton = {GetRectPosX(RIGHT)+8, screenHeight-offsetY*5, smallBoxWidth-16, offsetY*3,"Start Solving"};
 }
 
-Gui::Algorithm Gui::GenHandle() {
-    if(StartGenButton.IsClicked() && readyGen){
+Gui::Algorithm Gui::MainButtonHandler() {
+    if(StartGenButton.IsClicked() && ready){
+        ready = false;
         return ChosenGen.alg;
+    }
+    if(StartSolvingButton.IsClicked() && solveReady && ready){
+        ready = false;
+        return ChosenSolve.alg;
     }
     return None;
 }
 
 void Gui::Display() {
     DrawRectangleLinesEx(LeftContext, 2, WHITE);
-    DrawText("Generation:", GetRectPosX(LEFT) + GetRectArea(LEFT).x /2 - MeasureText("Generation:", this->screenWidth*0.02)/2, GetRectPosY(LEFT) + this->offsetY, this->screenWidth*0.02, WHITE);
+    DrawText("Generation:", GetRectPosX(LEFT) + (GetRectArea(LEFT).x - MeasureText("Generation:", this->screenWidth*0.02))/2, GetRectPosY(LEFT) + this->offsetY, this->screenWidth*0.02, WHITE);
     
     for(Button btn : this->genButtons){
         if(btn.IsHovered()){                            //hovered
             btn.ChangeColor(RAYWHITE, BLACK);
         }else if(btn.text == ChosenGen.text){           //chosen
-            btn.ChangeColor({3, 31, 143, 255}, WHITE);
-        }else{                                          //rest
+            btn.ChangeColor({235, 131, 52, 255}, WHITE);
+        }else{                                          //base color
             btn.ChangeColor({143, 17, 28, 255}, WHITE);
         }
 
@@ -67,26 +85,67 @@ void Gui::Display() {
     }
 
 
-    //Algorithm elapsed time and iterations count display
-    const char* elapsedTime = TextFormat("Time Elapsed: %.2f seconds", algTime);
-    DrawText(elapsedTime, GetRectPosX(LEFT) + offsetX, this->screenHeight-(GetRectPosY(LEFT) + this->offsetY*5), this->screenWidth*0.006, WHITE);
+    //Algorithm elapsed time and genIterations count display
+    const char* elapsedGenTime = TextFormat("Time Elapsed: %.2f seconds", genTime);
+    DrawText(elapsedGenTime, GetRectPosX(LEFT) + offsetX, this->screenHeight-(GetRectPosY(LEFT) + this->offsetY*5), this->screenWidth*0.006, WHITE);
 
-    const char* iterationsCount = TextFormat("Algorithm Step Count: %d", iterations);
-    DrawText(iterationsCount, GetRectPosX(LEFT) + offsetX, this->screenHeight-(GetRectPosY(LEFT) + this->offsetY*6), this->screenWidth*0.006, WHITE);
+    const char* genIterationsCount = TextFormat("Generation Step Count: %d", genIterations);
+    DrawText(genIterationsCount, GetRectPosX(LEFT) + offsetX, this->screenHeight-(GetRectPosY(LEFT) + this->offsetY*6), this->screenWidth*0.006, WHITE);
 
 
-    if(StartGenButton.IsHovered() && genState == None){
+    if(StartGenButton.IsHovered() && choosenAlgorithm == Algorithm::None){  //hovered allowed
         StartGenButton.ChangeColor(RAYWHITE, BLACK);
-    }else if(genState!=None){
+    }else if(choosenAlgorithm != Algorithm::None){                          //locked
         StartGenButton.ChangeColor({108, 117, 148, 255}, BLACK);
-    }else{
+    }else{                                                                  //base color
         StartGenButton.ChangeColor({143, 17, 28, 255}, WHITE);
     }
     StartGenButton.Display();
     
+
+
     DrawRectangleLinesEx(CenterContext, 2, WHITE);
 
+
+
     DrawRectangleLinesEx(RightContext, 2, WHITE);
+    DrawText("Solving:", GetRectPosX(RIGHT) + (GetRectArea(LEFT).x - MeasureText("Solving:", this->screenWidth*0.02))/2, GetRectPosY(RIGHT) + this->offsetY, this->screenWidth*0.02, WHITE);
+
+    for(Button btn : this->solveButtons){
+        if(btn.IsHovered() && solveReady){                      //hovered
+            btn.ChangeColor(RAYWHITE, BLACK);
+        }else if(btn.text == ChosenSolve.text && solveReady){  //chosen
+            btn.ChangeColor({52, 177, 235, 255}, WHITE);
+        }else{
+            if(solveReady){
+                btn.ChangeColor({55, 52, 235, 255}, WHITE);     //unlocked
+            }else{
+                btn.ChangeColor({108, 117, 148, 255}, BLACK);   //locked
+            }
+        }
+
+        btn.Display();
+
+        if(btn.IsClicked() && solveReady){
+            this->ChosenSolve = btn;
+        }
+    }
+
+    //Algorithm elapsed time and solveIterations count display
+    const char* elapsedSolveTime = TextFormat("Time Elapsed: %.2f seconds", solveTime);
+    DrawText(elapsedSolveTime, GetRectPosX(RIGHT) + offsetX, this->screenHeight-(GetRectPosY(RIGHT) + this->offsetY*5), this->screenWidth*0.006, WHITE);
+
+    const char* solveIterationsCount = TextFormat("Solving Step Count: %d", solveIterations);
+    DrawText(solveIterationsCount, GetRectPosX(RIGHT) + offsetX, this->screenHeight-(GetRectPosY(RIGHT) + this->offsetY*6), this->screenWidth*0.006, WHITE);
+
+    if(StartSolvingButton.IsHovered() && choosenAlgorithm == Algorithm::None && solveReady){    //hovered allowed
+        StartSolvingButton.ChangeColor(RAYWHITE, BLACK);
+    }else if(choosenAlgorithm!=Algorithm::None || !solveReady){                                 //locked
+        StartSolvingButton.ChangeColor({108, 117, 148, 255}, BLACK);
+    }else{                                                                                      //base color
+        StartSolvingButton.ChangeColor({143, 17, 28, 255}, WHITE);
+    }
+    StartSolvingButton.Display();
 }
 
 void Gui::ChangeRectPosition(Context c, float x, float y){

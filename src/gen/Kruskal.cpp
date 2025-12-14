@@ -4,7 +4,6 @@ using namespace std;
 
 void Kruskal::Init(Grid &maze) {
     //Throw all of the Edges into set
-    // cout << "edges:" << endl;
     int h = 0;
     for (int i = 0; i < (int)maze.grid.size(); i++){        
         for (int j = 0; j < (int)maze.grid[i].size(); j++){
@@ -12,13 +11,11 @@ void Kruskal::Init(Grid &maze) {
             if(j >= 0 && j < (int)maze.grid[i].size()-1){     //Right Edge
                 edgeList.push_back({{i, j}, {i, j+1}, Grid::Position::RIGHT});
 
-                // cout << "\t" << i << ", " << j <<"  |  "<<  Grid::Position::RIGHT << " -> " << h <<endl;
             }
 
             if(i >= 0 && i < (int)maze.grid.size()-1){        //Bottom Edge
                 edgeList.push_back({{i, j}, {i+1, j},Grid::Position::DOWN});
 
-                // cout << "\t" << i << ", " << j <<"  |  "<<  Grid::Position::DOWN << " -> " << h <<endl;
             }
 
             maze.grid[i][j].groupID = h;

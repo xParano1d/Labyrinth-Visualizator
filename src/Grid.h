@@ -7,7 +7,8 @@ class Grid {
     public:
         int rows;
         int columns;
-        
+        bool generated;
+
         struct CellPosition {
             int row;
             int col;
@@ -53,8 +54,9 @@ class Grid {
         vector<Position> UnvisitedNeighbours(int cellRow, int cellCol);
         vector<Position> VisitedNeighbours(int cellRow, int cellCol);
         int UnvisitedCount();
-
+        
     private:
+
         bool highlightRow = false;
         int highlightedRow;
         Color highlightColor;
