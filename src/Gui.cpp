@@ -70,9 +70,13 @@ void Gui::Display() {
     
     for(Button btn : this->genButtons){
         if(btn.IsHovered()){                            //hovered
-            btn.ChangeColor(RAYWHITE, BLACK);
+            if(btn.text == ChosenGen.text){
+                btn.ChangeColor({143, 36, 17, 255}, BLACK);
+            }else{
+                btn.ChangeColor(RAYWHITE, BLACK);
+            }
         }else if(btn.text == ChosenGen.text){           //chosen
-            btn.ChangeColor({235, 131, 52, 255}, WHITE);
+            btn.ChangeColor({143, 36, 17, 255}, WHITE);
         }else{                                          //base color
             btn.ChangeColor({143, 17, 28, 255}, WHITE);
         }
@@ -113,7 +117,11 @@ void Gui::Display() {
 
     for(Button btn : this->solveButtons){
         if(btn.IsHovered() && solveReady){                      //hovered
-            btn.ChangeColor(RAYWHITE, BLACK);
+            if(btn.text == ChosenSolve.text){
+                btn.ChangeColor({52, 177, 235, 255}, BLACK);
+            }else{
+                btn.ChangeColor(RAYWHITE, BLACK);
+            }
         }else if(btn.text == ChosenSolve.text && solveReady){  //chosen
             btn.ChangeColor({52, 177, 235, 255}, WHITE);
         }else{
@@ -133,10 +141,10 @@ void Gui::Display() {
 
     //Algorithm elapsed time and solveIterations count display
     const char* elapsedSolveTime = TextFormat("Time Elapsed: %.2f seconds", solveTime);
-    DrawText(elapsedSolveTime, GetRectPosX(RIGHT) + offsetX, this->screenHeight-(GetRectPosY(RIGHT) + this->offsetY*5), this->screenWidth*0.006, WHITE);
+    DrawText(elapsedSolveTime, GetRectPosX(RIGHT) + offsetX, this->screenHeight-(GetRectPosY(RIGHT) + this->offsetY*5), this->screenWidth*0.01, WHITE);
 
     const char* solveIterationsCount = TextFormat("Solving Step Count: %d", solveIterations);
-    DrawText(solveIterationsCount, GetRectPosX(RIGHT) + offsetX, this->screenHeight-(GetRectPosY(RIGHT) + this->offsetY*6), this->screenWidth*0.006, WHITE);
+    DrawText(solveIterationsCount, GetRectPosX(RIGHT) + offsetX, this->screenHeight-(GetRectPosY(RIGHT) + this->offsetY*6), this->screenWidth*0.01, WHITE);
 
     if(StartSolvingButton.IsHovered() && choosenAlgorithm == Algorithm::None && solveReady){    //hovered allowed
         StartSolvingButton.ChangeColor(RAYWHITE, BLACK);

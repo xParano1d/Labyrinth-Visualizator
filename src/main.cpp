@@ -18,7 +18,7 @@ int main() {
     int startingRow = 0;
     int startingCol = 0;
 
-    float vSpeed = 20;     //visualization speed 
+    float vSpeed = 100;     //visualization speed 
     vSpeed = 1 / vSpeed;    //heighest value -> faster
     
 
@@ -27,14 +27,17 @@ int main() {
     Grid grid;
     Gui gui;
 
-
+    Image icon = LoadImage("./icon.png");
     InitWindow(screenWidth, screenHeight, "Labyrinths Visualization");
+    SetWindowIcon(icon);
     SetTargetFPS(60);
     SetRandomSeed((unsigned int)time(NULL));
-    
+
+    UnloadImage(icon);
+
     double delay;
     double genTime;
-    // double solveTime;
+    double solveTime;
     bool algType;       // true -> Gen  |  false -> solve
 
     gui.Init();
@@ -82,14 +85,15 @@ int main() {
 
 
                 case (Gui::Algorithm::HandOnWall):
-
+                    algType = false;
                 break;
 
                 case (Gui::Algorithm::ShortestPath):
-
+                    algType = false;
                 break;
 
                 case (Gui::Algorithm::DeadEndFiller):
+                    algType = false;
                     std::cout << "test" << std::endl;
                 break;
             }
@@ -106,13 +110,12 @@ int main() {
                     gui.solveIterations++;
 
                     gui.solveTime = 0;
-                    // solveTime = GetTime();
+                    solveTime = GetTime();
                 }
                 delay = GetTime();
             }
 
         }else{
-            gui.genTime = GetTime() - genTime;
             
             switch (gui.choosenAlgorithm){
                 case (Gui::Algorithm::Backtracking):
@@ -179,6 +182,7 @@ int main() {
                 break;
 
                 case (Gui::Algorithm::DeadEndFiller):
+                    gui.solveIterations++;
                     gui.ready = true;
                     gui.choosenAlgorithm = Gui::Algorithm::None;
                 break;
@@ -193,6 +197,12 @@ int main() {
                     gui.ready = true;
                     gui.choosenAlgorithm = Gui::Algorithm::None;
                 }
+            }
+
+            if(algType){
+                gui.genTime = GetTime() - genTime;
+            }else{
+                gui.solveTime = GetTime() - solveTime;
             }
         }
 

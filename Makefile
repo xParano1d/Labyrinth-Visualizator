@@ -24,7 +24,8 @@
 .PHONY: all clean
 
 # Define required raylib variables
-PROJECT_NAME       ?= game
+PROJECT_NAME       = Main
+EXT = .exe
 RAYLIB_VERSION     ?= 5.0.0
 RAYLIB_PATH        ?= ..\..
 
@@ -208,7 +209,8 @@ ifeq ($(PLATFORM),PLATFORM_DESKTOP)
     ifeq ($(PLATFORM_OS),WINDOWS)
         # resource file contains windows executable icon and properties
         # -Wl,--subsystem,windows hides the console window
-        CFLAGS += $(RAYLIB_PATH)/src/raylib.rc.data
+        #$(RAYLIB_PATH)/src/raylib.rc.data
+        CFLAGS += -Wl,--subsystem,windows 
     endif
     ifeq ($(PLATFORM_OS),LINUX)
         ifeq ($(RAYLIB_LIBTYPE),STATIC)
@@ -370,7 +372,7 @@ OBJ_DIR = obj
 # Define all object files from source files
 SRC = $(call rwildcard, *.c, *.h)
 #OBJS = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
-OBJS ?= main.c
+OBJS ?= main.cpp icon.o
 
 # For Android platform we call a custom Makefile.Android
 ifeq ($(PLATFORM),PLATFORM_ANDROID)
@@ -419,3 +421,6 @@ ifeq ($(PLATFORM),PLATFORM_WEB)
 endif
 	@echo Cleaning done
 
+# Rule to compile the resource file
+icon.o: icon.rc
+	windres icon.rc -o icon.o
