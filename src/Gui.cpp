@@ -19,16 +19,16 @@ void Gui::Init() {
 
     this->genButtons.resize(4);    //? Number of Buttons for Generation Algorithms
     //Recursive Backtrack
-    this->genButtons[0] = Button{GetRectPosX(LEFT)+12, offsetY * 8, smallBoxWidth-24, offsetY*3,"Backtracking", Backtracking};
+    this->genButtons[0] = Button{GetRectPosX(LEFT)+12, offsetY * 8, smallBoxWidth-24, offsetY*3, "Backtracking", Backtracking};
     //Hunt n' Kill
-    this->genButtons[1] = Button{GetRectPosX(LEFT)+12, offsetY * 11.5f, smallBoxWidth-24, offsetY*3,"Hunt n' Kill", HuntNKill};
+    this->genButtons[1] = Button{GetRectPosX(LEFT)+12, offsetY * 11.5f, smallBoxWidth-24, offsetY*3, "Hunt n' Kill", HuntNKill};
     //Prim
-    this->genButtons[2] = Button{GetRectPosX(LEFT)+12, offsetY * 15, smallBoxWidth-24, offsetY*3,"Prim", Prim};
+    this->genButtons[2] = Button{GetRectPosX(LEFT)+12, offsetY * 15, smallBoxWidth-24, offsetY*3, "Prim", Prim};
     //Kruskal
-    this->genButtons[3] = Button{GetRectPosX(LEFT)+12, offsetY * 18.5f, smallBoxWidth-24, offsetY*3,"Kruskal", Kruskal};
+    this->genButtons[3] = Button{GetRectPosX(LEFT)+12, offsetY * 18.5f, smallBoxWidth-24, offsetY*3, "Kruskal", Kruskal};
 
     //Generate Button
-    this->StartGenButton = {GetRectPosX(LEFT)+8, screenHeight-offsetY*5, smallBoxWidth-16, offsetY*3,"Start Generating"};
+    this->StartGenButton = {GetRectPosX(LEFT)+8, screenHeight-offsetY*5, smallBoxWidth-16, offsetY*3, "Start Generating"};
 
 
 
@@ -42,14 +42,14 @@ void Gui::Init() {
 
     this->solveButtons.resize(3);    //? Number of Buttons for Solve Algorithms
     //Hand On Wall 
-    this->solveButtons[0] = Button{GetRectPosX(RIGHT)+12, offsetY * 8, smallBoxWidth-24, offsetY*3,"Hand On Wall", HandOnWall};
+    this->solveButtons[0] = Button{GetRectPosX(RIGHT)+12, offsetY * 8, smallBoxWidth-24, offsetY*3, "Wall Follower", WallFollower};
     //Shortest Path
-    this->solveButtons[1] = Button{GetRectPosX(RIGHT)+12, offsetY * 11.5f, smallBoxWidth-24, offsetY*3,"Shortest Path", ShortestPath};
+    this->solveButtons[1] = Button{GetRectPosX(RIGHT)+12, offsetY * 11.5f, smallBoxWidth-24, offsetY*3, "Breadth First Search", BreadthFirstSearch};
     //DeadEndFiller
-    this->solveButtons[2] = Button{GetRectPosX(RIGHT)+12, offsetY * 15, smallBoxWidth-24, offsetY*3,"Dead End Filler", DeadEndFiller};
+    this->solveButtons[2] = Button{GetRectPosX(RIGHT)+12, offsetY * 15, smallBoxWidth-24, offsetY*3, "Dead End Filler", DeadEndFiller};
 
     //Generate Button
-    this->StartSolvingButton = {GetRectPosX(RIGHT)+8, screenHeight-offsetY*5, smallBoxWidth-16, offsetY*3,"Start Solving"};
+    this->StartSolvingButton = {GetRectPosX(RIGHT)+8, screenHeight-offsetY*5, smallBoxWidth-16, offsetY*3, "Start Solving"};
 }
 
 Gui::Algorithm Gui::MainButtonHandler() {

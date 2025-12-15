@@ -84,11 +84,11 @@ int main() {
                 break;
 
 
-                case (Gui::Algorithm::HandOnWall):
+                case (Gui::Algorithm::WallFollower):
                     algType = false;
                 break;
 
-                case (Gui::Algorithm::ShortestPath):
+                case (Gui::Algorithm::BreadthFirstSearch):
                     algType = false;
                 break;
 
@@ -171,12 +171,14 @@ int main() {
                 break;
 
 
-                case (Gui::Algorithm::HandOnWall):
+                case (Gui::Algorithm::WallFollower):
+
                     gui.ready = true;
                     gui.choosenAlgorithm = Gui::Algorithm::None;
                 break;
 
-                case (Gui::Algorithm::ShortestPath):
+                case (Gui::Algorithm::BreadthFirstSearch):
+
                     gui.ready = true;
                     gui.choosenAlgorithm = Gui::Algorithm::None;
                 break;

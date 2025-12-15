@@ -24,8 +24,8 @@ class Gui {
             Kruskal,
 
             //Solve
-            HandOnWall,
-            ShortestPath,
+            WallFollower,
+            BreadthFirstSearch,
             DeadEndFiller
         };
         Algorithm choosenAlgorithm;

@@ -20,14 +20,19 @@ TODO:
             ✔ Prim @done (12/13/2025, 6:13:14 PM)
             ✔ Kruskal @done (12/14/2025, 12:22:27 AM)
             ☐ Eller?
+            ☐ Sidewinder
+
         Solve:
-            ☐ Hand on Right Wall
-            ☐ Backtracking
-            ☐ Shortest Path
+            ☐ Wall Follower
+            ☐ Breadth First Search (BFS)
             ☐ Dead End Filler
+            ☐ A* (A-Star)
+            ☐ Dijkstra
+            ☐ Pledge
 
 
     Issues to fix:
         ☐ cell walls scaling and overall graphics improvement needed
         ☐ Hunt n' Kill highlighting row one time per iteration 
         ✔ IsHovered() for selected button should have the same color @done (12/15/2025, 1:26:30 AM)
+

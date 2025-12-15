@@ -15,11 +15,15 @@ Algorithms:
         ✔ Prim @done (12/13/2025, 6:13:14 PM)
         ✔ Kruskal @done (12/14/2025, 12:22:27 AM)
         ☐ Eller?
+        ☐ Sidewinder
+
     Solve:
-        ☐ Hand on Right Wall
-        ☐ Backtracking
-        ☐ Shortest Path
+        ☐ Wall Follower
+        ☐ Breadth First Search (BFS)
         ☐ Dead End Filler
+        ☐ A* (A-Star)
+        ☐ Dijkstra
+        ☐ Pledge
 
 
 Issues to fix:

@@ -53,6 +53,14 @@ void Grid::ChangeGroupsID(int fromID, int toID) {
     }
 }
 
+void Grid::UnvisitEveryCell() {
+    for (int i = 0; i < rows; i++){
+        for (int j = 0; j < columns; j++){
+            grid[i][j].visited = false;
+        }
+    }
+}
+
 void Grid::Display() {
     float centerX = GetScreenWidth() / 2;
     float centerY = GetScreenHeight() / 2;
@@ -93,6 +101,10 @@ void Grid::Display() {
         }
         posX = startPosX;
         posY = posY + offsetY;
+    }
+    
+    for(Section sect : solvePath){
+        DrawLineEx(sect.A, sect.B, 6, sect.color);
     }
     
 }

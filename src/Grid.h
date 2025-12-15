@@ -15,6 +15,13 @@ class Grid {
         };
         vector<CellPosition> stack;
 
+        struct Section{
+            Vector2 A;
+            Vector2 B;
+            Color color = {27, 227, 84, 255};
+        };
+        vector<Section> solvePath;
+
         enum Position {
             LEFT,
             UP,
@@ -49,6 +56,7 @@ class Grid {
         void HighlightRow(int row, Color c);
 
         void ChangeGroupsID(int fromID, int toID);
+        void UnvisitEveryCell();
 
         vector<CellPosition> GetUnvisitedNeighboursPosition(int cellRow, int cellCol);
         vector<Position> UnvisitedNeighbours(int cellRow, int cellCol);
