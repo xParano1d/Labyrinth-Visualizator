@@ -1,6 +1,7 @@
 #include "Grid.h"
 #include <raylib.h>
-
+#include <iostream>
+using namespace std;
 
 void Grid::Create(int rows, int columns) {
     this->rows = rows;
@@ -20,6 +21,8 @@ void Grid::Create(int rows, int columns) {
     this->grid[rows-1][columns-1].bottomWall = false;
 
     generated = false;
+
+    solvePath.clear();
 }
 
 void Grid::ChangeEveryCellColor(Color c) {
@@ -76,6 +79,7 @@ void Grid::Display() {
     float posX = centerX - width/2; 
     float posY = centerY - height/2;
 
+
     float borderThickness = 8;
     DrawRectangle(posX-borderThickness, posY-borderThickness/aspectRatio, width+2*borderThickness, height+2*(borderThickness/aspectRatio), WHITE); //? Background of a Grid
 
@@ -102,9 +106,24 @@ void Grid::Display() {
         posX = startPosX;
         posY = posY + offsetY;
     }
-    
+
+
+    posX = centerX - width/2; 
+    posY = centerY - height/2;
+ 
+
+    float cellCenterX = offsetX / 2;
+    float cellCenterY = offsetY / 2;
+
     for(Section sect : solvePath){
-        DrawLineEx(sect.A, sect.B, 6, sect.color);
+
+        float AX = posX + cellCenterX + sect.A.col * offsetX;
+        float AY = posY + cellCenterY + sect.A.row * offsetY; 
+        
+        float BX = posX + cellCenterX + sect.B.col * offsetX;
+        float BY = posY + cellCenterY + sect.B.row * offsetY;
+
+        DrawLineEx({AX, AY}, {BX, BY}, 6, sect.color);
     }
     
 }

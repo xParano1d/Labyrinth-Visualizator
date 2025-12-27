@@ -1,10 +1,13 @@
 #include <iostream>
 #include <raylib.h>
 #include "Gui.h"
+
 #include "./gen/Backtracking.h"
 #include "./gen/HuntnKill.h"
 #include "./gen/Prim.h"
 #include "./gen/Kruskal.h"
+
+#include "./solve/WallFollower.h"
 
 
 int main() {
@@ -85,6 +88,7 @@ int main() {
 
 
                 case (Gui::Algorithm::WallFollower):
+                    WallFollower::Init(0, 0, grid);
                     algType = false;
                 break;
 
@@ -172,9 +176,16 @@ int main() {
 
 
                 case (Gui::Algorithm::WallFollower):
-
-                    gui.ready = true;
-                    gui.choosenAlgorithm = Gui::Algorithm::None;
+                    if(GetTime()-delay > vSpeed){
+                        if(!WallFollower::Solved){
+                            WallFollower::Solve(grid);
+                            gui.solveIterations++;
+                            delay = GetTime();
+                        }else{
+                            gui.ready = true;
+                            gui.choosenAlgorithm = Gui::Algorithm::None;
+                        }
+                    }
                 break;
 
                 case (Gui::Algorithm::BreadthFirstSearch):

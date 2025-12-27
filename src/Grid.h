@@ -12,12 +12,13 @@ class Grid {
         struct CellPosition {
             int row;
             int col;
+
         };
         vector<CellPosition> stack;
 
         struct Section{
-            Vector2 A;
-            Vector2 B;
+            CellPosition A;
+            CellPosition B;
             Color color = {27, 227, 84, 255};
         };
         vector<Section> solvePath;
@@ -63,11 +64,11 @@ class Grid {
         vector<Position> VisitedNeighbours(int cellRow, int cellCol);
         int UnvisitedCount();
 
-        
+
         
     private:
 
         bool highlightRow = false;
         int highlightedRow;
-        Color highlightColor;
+        Color highlightColor = {};
 };
