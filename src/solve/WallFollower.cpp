@@ -144,7 +144,17 @@ void WallFollower::Solve(Grid &maze) {
 
         
         if(previousRow != currentRow || previousCol != currentCol){
-            maze.solvePath.push_back({{previousRow, previousCol}, {currentRow, currentCol}});
+            
+            if (!maze.solvePath.empty() && maze.solvePath.back().A.row == currentRow && maze.solvePath.back().A.col == currentCol){
+
+                maze.deadEndPath.push_back(maze.solvePath.back());
+
+                maze.solvePath.pop_back();
+
+            }else{
+
+                maze.solvePath.push_back({{previousRow, previousCol}, {currentRow, currentCol}});
+            }
 
             maze.grid[previousRow][previousCol].color = WHITE;
             maze.grid[currentRow][currentCol].color = {108, 117, 148, 255};

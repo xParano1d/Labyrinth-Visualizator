@@ -5,6 +5,7 @@ class WallFollower {
     private:
         inline static int previousRow;
         inline static int previousCol;
+
         inline static int currentRow;
         inline static int currentCol;
         inline static Grid::Position currentDirection;

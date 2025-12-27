@@ -1,7 +1,5 @@
 #include "Grid.h"
 #include <raylib.h>
-#include <iostream>
-using namespace std;
 
 void Grid::Create(int rows, int columns) {
     this->rows = rows;
@@ -122,8 +120,19 @@ void Grid::Display() {
         
         float BX = posX + cellCenterX + sect.B.col * offsetX;
         float BY = posY + cellCenterY + sect.B.row * offsetY;
+        
+        DrawLineEx({AX, AY}, {BX, BY}, 6, {27, 227, 84, 255});
+    }
 
-        DrawLineEx({AX, AY}, {BX, BY}, 6, sect.color);
+    for(Section sect : deadEndPath){
+
+        float AX = posX + cellCenterX + sect.A.col * offsetX;
+        float AY = posY + cellCenterY + sect.A.row * offsetY; 
+        
+        float BX = posX + cellCenterX + sect.B.col * offsetX;
+        float BY = posY + cellCenterY + sect.B.row * offsetY;
+        
+        DrawLineEx({AX, AY}, {BX, BY}, 6, {108, 117, 148, 255});
     }
     
 }

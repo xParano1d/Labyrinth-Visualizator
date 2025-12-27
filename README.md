@@ -23,7 +23,7 @@ TODO:
             ☐ Sidewinder
 
         Solve:
-            ☐ Wall Follower
+            ✔ Wall Follower @done (12/27/2025, 7:27:26 PM)
             ☐ Breadth First Search (BFS)
             ☐ Dead End Filler
             ☐ A* (A-Star)
@@ -35,4 +35,5 @@ TODO:
         ☐ cell walls scaling and overall graphics improvement needed
         ☐ Hunt n' Kill highlighting row one time per iteration 
         ✔ IsHovered() for selected button should have the same color @done (12/15/2025, 1:26:30 AM)
+
 

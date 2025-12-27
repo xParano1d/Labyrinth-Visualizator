@@ -19,9 +19,9 @@ class Grid {
         struct Section{
             CellPosition A;
             CellPosition B;
-            Color color = {27, 227, 84, 255};
         };
         vector<Section> solvePath;
+        vector<Section> deadEndPath;
 
         enum Position {
             LEFT,
