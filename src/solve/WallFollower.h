@@ -13,5 +13,4 @@ class WallFollower {
     public:
         static void Init(int startingRow, int startingCol, Grid& maze);
         static void Solve(Grid &maze);
-        inline static bool Solved;
 };

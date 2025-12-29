@@ -20,13 +20,13 @@ Algorithms:
     Solve:
         ✔ Wall Follower @done (12/27/2025, 7:27:26 PM)
         ☐ Breadth First Search (BFS)
-        ☐ Dead End Filler
-        ☐ A* (A-Star)
-        ☐ Dijkstra
         ☐ Pledge
+        ☐ Dead End Filler
+        ☐ Dijkstra
+        ☐ A* (A-Star)
 
 
 Issues to fix:
     ☐ cell walls scaling and overall graphics improvement needed
-    ☐ Hunt n' Kill highlighting row one time per iteration 
+    ✔ Hunt n' Kill highlighting row one time per iteration @done (12/29/2025, 3:42:55 PM)
     ✔ IsHovered() for selected button should have the same color @done (12/15/2025, 1:26:30 AM)

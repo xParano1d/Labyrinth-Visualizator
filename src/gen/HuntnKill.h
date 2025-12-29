@@ -3,9 +3,14 @@
 
 class HuntnKill {
     private:
+        inline static int highlightIterationRow;
+        inline static int highlightIterationCol;
+        inline static Grid::Cell *pLastCell;
+        inline static Color lastCellColor;
+        inline static bool unvisitedCellFound;
+
         inline static int currentRow;
         inline static int currentCol;
-        inline static int highlightIteration;
 
         static void Hunt(Grid& maze);
     public:

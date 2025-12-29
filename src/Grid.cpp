@@ -1,6 +1,11 @@
 #include "Grid.h"
 #include <raylib.h>
 
+void Grid::ClearSolution() {
+    solvePath.clear();
+    deadEndPath.clear();
+}
+
 void Grid::Create(int rows, int columns) {
     this->rows = rows;
     this->columns = columns;
@@ -20,7 +25,8 @@ void Grid::Create(int rows, int columns) {
 
     generated = false;
 
-    solvePath.clear();
+    Solved = false;
+    ClearSolution();
 }
 
 void Grid::ChangeEveryCellColor(Color c) {
@@ -32,16 +38,16 @@ void Grid::ChangeEveryCellColor(Color c) {
 }
 
 void Grid::HighlightRow(int row, Color c) {
-    highlightRow = true;
+    highlightRowEnabled = true;
 
-    if(row <= 0){
-        highlightedRow = 1;
+    if(row < 0){
+        highlightedRow = 0;
     }else{
         highlightedRow = row;
     }
     
     highlightColor = c;
-    highlightColor.a = 120;
+    highlightColor.a = 90;
 }
 
 void Grid::ChangeGroupsID(int fromID, int toID) {
@@ -79,11 +85,15 @@ void Grid::Display() {
 
 
     float borderThickness = 8;
-    DrawRectangle(posX-borderThickness, posY-borderThickness/aspectRatio, width+2*borderThickness, height+2*(borderThickness/aspectRatio), WHITE); //? Background of a Grid
 
+    //? Background of a Grid
+    DrawRectangle(posX-borderThickness, posY-borderThickness/aspectRatio, width+2*borderThickness, height+2*(borderThickness/aspectRatio), WHITE);
+    
+    //Drawing Grid
     float startPosX = posX;
     for (int i = 0; i < this->rows; i++){
         for (int j = 0; j < this->columns; j++){
+            
             DrawRectangle(posX, posY, offsetX, offsetY, grid[i][j].color);  //* Background of a Cell
 
             if(this->grid[i][j].rightWall){
@@ -105,36 +115,43 @@ void Grid::Display() {
         posY = posY + offsetY;
     }
 
-
     posX = centerX - width/2; 
     posY = centerY - height/2;
- 
 
     float cellCenterX = offsetX / 2;
     float cellCenterY = offsetY / 2;
 
-    for(Section sect : solvePath){
-
-        float AX = posX + cellCenterX + sect.A.col * offsetX;
-        float AY = posY + cellCenterY + sect.A.row * offsetY; 
-        
-        float BX = posX + cellCenterX + sect.B.col * offsetX;
-        float BY = posY + cellCenterY + sect.B.row * offsetY;
-        
-        DrawLineEx({AX, AY}, {BX, BY}, 6, {27, 227, 84, 255});
-    }
-
-    for(Section sect : deadEndPath){
-
-        float AX = posX + cellCenterX + sect.A.col * offsetX;
-        float AY = posY + cellCenterY + sect.A.row * offsetY; 
-        
-        float BX = posX + cellCenterX + sect.B.col * offsetX;
-        float BY = posY + cellCenterY + sect.B.row * offsetY;
-        
-        DrawLineEx({AX, AY}, {BX, BY}, 6, {108, 117, 148, 255});
-    }
+    //Drawing Solution
+    if(!solvePath.empty()){     //* Green Path (Solution)
+        for(Section sect : solvePath){
     
+            float AX = posX + cellCenterX + sect.A.col * offsetX;
+            float AY = posY + cellCenterY + sect.A.row * offsetY; 
+            
+            float BX = posX + cellCenterX + sect.B.col * offsetX;
+            float BY = posY + cellCenterY + sect.B.row * offsetY;
+            
+            DrawLineEx({AX, AY}, {BX, BY}, 6, {27, 227, 84, 255});
+        }
+    }
+
+    if(!deadEndPath.empty()){   //Grey Path
+        for(Section sect : deadEndPath){
+
+            float AX = posX + cellCenterX + sect.A.col * offsetX;
+            float AY = posY + cellCenterY + sect.A.row * offsetY; 
+            
+            float BX = posX + cellCenterX + sect.B.col * offsetX;
+            float BY = posY + cellCenterY + sect.B.row * offsetY;
+            
+            DrawLineEx({AX, AY}, {BX, BY}, 6, {108, 117, 148, 255});
+        }
+    }
+
+    //Row Highlighting
+    if(highlightRowEnabled){
+        DrawRectangle(posX, posY+highlightedRow*offsetY, width, offsetY, highlightColor);
+    }
 }
 
 vector<Grid::CellPosition> Grid::GetUnvisitedNeighboursPosition(int cellRow, int cellCol) {

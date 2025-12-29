@@ -17,7 +17,8 @@ void Gui::Init() {
     //Left Box
     LeftContext = {offsetX, offsetY, smallBoxWidth, boxHeight};
 
-    this->genButtons.resize(4);    //? Number of Buttons for Generation Algorithms
+
+    this->genButtons.resize(6);    //? Number of Buttons for Generation Algorithms
     //Recursive Backtrack
     this->genButtons[0] = Button{GetRectPosX(LEFT)+12, offsetY * 8, smallBoxWidth-24, offsetY*3, "Backtracking", Backtracking};
     //Hunt n' Kill
@@ -26,6 +27,10 @@ void Gui::Init() {
     this->genButtons[2] = Button{GetRectPosX(LEFT)+12, offsetY * 15, smallBoxWidth-24, offsetY*3, "Prim", Prim};
     //Kruskal
     this->genButtons[3] = Button{GetRectPosX(LEFT)+12, offsetY * 18.5f, smallBoxWidth-24, offsetY*3, "Kruskal", Kruskal};
+    //Eller
+    this->genButtons[4] = Button{GetRectPosX(LEFT)+12, offsetY * 22, smallBoxWidth-24, offsetY*3, "Eller", Eller};
+    //Sidewinder
+    this->genButtons[5] = Button{GetRectPosX(LEFT)+12, offsetY * 25.5f, smallBoxWidth-24, offsetY*3, "Sidewinder", Sidewinder};
 
     //Generate Button
     this->StartGenButton = {GetRectPosX(LEFT)+8, screenHeight-offsetY*5, smallBoxWidth-16, offsetY*3, "Start Generating"};
@@ -34,19 +39,28 @@ void Gui::Init() {
 
     //Center Box
     CenterContext = {2 * offsetX + smallBoxWidth, offsetY, bigBoxWidth, boxHeight};
+    //TODO: Settings button idk where
+
 
 
 
     //Right Box
     RightContext = {screenWidth - (smallBoxWidth + offsetX), offsetY, smallBoxWidth, boxHeight};
 
-    this->solveButtons.resize(3);    //? Number of Buttons for Solve Algorithms
+
+    this->solveButtons.resize(6);    //? Number of Buttons for Solve Algorithms
     //Hand On Wall 
     this->solveButtons[0] = Button{GetRectPosX(RIGHT)+12, offsetY * 8, smallBoxWidth-24, offsetY*3, "Wall Follower", WallFollower};
-    //Shortest Path
-    this->solveButtons[1] = Button{GetRectPosX(RIGHT)+12, offsetY * 11.5f, smallBoxWidth-24, offsetY*3, "Breadth First Search", BreadthFirstSearch};
+    //Breadth First Search
+    this->solveButtons[1] = Button{GetRectPosX(RIGHT)+12, offsetY * 11.5f, smallBoxWidth-24, offsetY*3, "BreadthFirstSearch", BreadthFirstSearch};
+    //Pledge
+    this->solveButtons[2] = Button{GetRectPosX(RIGHT)+12, offsetY * 15, smallBoxWidth-24, offsetY*3, "Pledge", Pledge};
     //DeadEndFiller
-    this->solveButtons[2] = Button{GetRectPosX(RIGHT)+12, offsetY * 15, smallBoxWidth-24, offsetY*3, "Dead End Filler", DeadEndFiller};
+    this->solveButtons[3] = Button{GetRectPosX(RIGHT)+12, offsetY * 18.5f, smallBoxWidth-24, offsetY*3, "Dead End Filler", DeadEndFiller};
+    //Dijkstra
+    this->solveButtons[4] = Button{GetRectPosX(RIGHT)+12, offsetY * 22, smallBoxWidth-24, offsetY*3, "Dijkstra", Dijksta};
+    //A*
+    this->solveButtons[5] = Button{GetRectPosX(RIGHT)+12, offsetY * 25.5f, smallBoxWidth-24, offsetY*3, "A* (A Star)", AStar};
 
     //Generate Button
     this->StartSolvingButton = {GetRectPosX(RIGHT)+8, screenHeight-offsetY*5, smallBoxWidth-16, offsetY*3, "Start Solving"};
@@ -139,12 +153,14 @@ void Gui::Display() {
         }
     }
 
+    
     //Algorithm elapsed time and solveIterations count display
     const char* elapsedSolveTime = TextFormat("Time Elapsed: %.2f seconds", solveTime);
     DrawText(elapsedSolveTime, GetRectPosX(RIGHT) + offsetX, this->screenHeight-(GetRectPosY(RIGHT) + this->offsetY*5), this->screenWidth*0.01, WHITE);
 
     const char* solveIterationsCount = TextFormat("Solving Step Count: %d", solveIterations);
     DrawText(solveIterationsCount, GetRectPosX(RIGHT) + offsetX, this->screenHeight-(GetRectPosY(RIGHT) + this->offsetY*6), this->screenWidth*0.01, WHITE);
+
 
     if(StartSolvingButton.IsHovered() && choosenAlgorithm == Algorithm::None && solveReady){    //hovered allowed
         StartSolvingButton.ChangeColor(RAYWHITE, BLACK);

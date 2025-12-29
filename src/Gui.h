@@ -22,11 +22,16 @@ class Gui {
             HuntNKill,
             Prim,
             Kruskal,
+            Eller,
+            Sidewinder,
 
             //Solve
             WallFollower,
             BreadthFirstSearch,
-            DeadEndFiller
+            Pledge,
+            DeadEndFiller,
+            Dijksta,
+            AStar
         };
         Algorithm choosenAlgorithm;
 

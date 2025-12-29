@@ -4,14 +4,14 @@ Raylib C++ simple program for generating and solving labyrinths using different 
 TODO:
 
     Things to implement:
-        ✔ step by step algorithms displaying @done (12/9/2025, 10:38:31 PM)
-        ☐ Gui Settings (window size, grid size, speed, etc.)
-        ✔ Gui Gen time @done (11/11/2025, 7:22:08 PM)
-        ✔ Gui Gen iterations @done (11/11/2025, 7:22:12 PM)
-        ✔ Gui Solve time @done (12/14/2025, 8:02:50 PM)
-        ✔ Gui Solve iterations @done (12/14/2025, 8:02:52 PM)
-        ☐ save as gif/png
-        ☐ create an icon image for .exe file
+    ✔ step by step algorithms displaying @done (12/9/2025, 10:38:31 PM)
+    ☐ Gui Settings (window size, grid size, speed, etc.)
+    ✔ Gui Gen time @done (11/11/2025, 7:22:08 PM)
+    ✔ Gui Gen iterations @done (11/11/2025, 7:22:12 PM)
+    ✔ Gui Solve time @done (12/14/2025, 8:02:50 PM)
+    ✔ Gui Solve iterations @done (12/14/2025, 8:02:52 PM)
+    ☐ save as gif/png
+    ☐ create an icon image for .exe file
 
     Algorithms:
         Gen:
@@ -25,15 +25,14 @@ TODO:
         Solve:
             ✔ Wall Follower @done (12/27/2025, 7:27:26 PM)
             ☐ Breadth First Search (BFS)
-            ☐ Dead End Filler
-            ☐ A* (A-Star)
-            ☐ Dijkstra
             ☐ Pledge
+            ☐ Dead End Filler
+            ☐ Dijkstra
+            ☐ A* (A-Star)
 
 
     Issues to fix:
         ☐ cell walls scaling and overall graphics improvement needed
-        ☐ Hunt n' Kill highlighting row one time per iteration 
+        ✔ Hunt n' Kill highlighting row one time per iteration @done (12/29/2025, 3:42:55 PM)
         ✔ IsHovered() for selected button should have the same color @done (12/15/2025, 1:26:30 AM)
-
 

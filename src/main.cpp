@@ -15,8 +15,8 @@ int main() {
     constexpr int screenHeight = 600;
 
     //settings
-    int gridWidth = 20;
-    int gridHeight = 20;
+    int gridWidth = 10;
+    int gridHeight = 10;
 
     int startingRow = 0;
     int startingCol = 0;
@@ -96,9 +96,21 @@ int main() {
                     algType = false;
                 break;
 
+                case (Gui::Algorithm::Pledge):
+                    algType = false;
+                break;
+
                 case (Gui::Algorithm::DeadEndFiller):
                     algType = false;
                     std::cout << "test" << std::endl;
+                break;
+
+                case (Gui::Algorithm::Dijksta):
+                    algType = false;
+                break;
+
+                case (Gui::Algorithm::AStar):
+                    algType = false;
                 break;
             }
 
@@ -177,7 +189,7 @@ int main() {
 
                 case (Gui::Algorithm::WallFollower):
                     if(GetTime()-delay > vSpeed){
-                        if(!WallFollower::Solved){
+                        if(!grid.Solved){
                             WallFollower::Solve(grid);
                             gui.solveIterations++;
                             delay = GetTime();
@@ -194,8 +206,26 @@ int main() {
                     gui.choosenAlgorithm = Gui::Algorithm::None;
                 break;
 
+                case (Gui::Algorithm::Pledge):
+
+                    gui.ready = true;
+                    gui.choosenAlgorithm = Gui::Algorithm::None;
+                break;
+
                 case (Gui::Algorithm::DeadEndFiller):
                     gui.solveIterations++;
+                    gui.ready = true;
+                    gui.choosenAlgorithm = Gui::Algorithm::None;
+                break;
+
+                case (Gui::Algorithm::Dijksta):
+
+                    gui.ready = true;
+                    gui.choosenAlgorithm = Gui::Algorithm::None;
+                break;
+
+                case (Gui::Algorithm::AStar):
+
                     gui.ready = true;
                     gui.choosenAlgorithm = Gui::Algorithm::None;
                 break;
