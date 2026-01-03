@@ -1,5 +1,8 @@
 #include "BreadthFirstSearch.h"
 
+#include <iostream>
+using namespace std;
+
 void BreadthFirstSearch::Init(int startingRow, int startingCol, Grid &maze) {
     maze.UnvisitEveryCell();
     while(!frontier.empty()){
@@ -12,63 +15,92 @@ void BreadthFirstSearch::Init(int startingRow, int startingCol, Grid &maze) {
     maze.grid[startingRow][startingCol].visited = true;
 
 
-    //Set the Start Cell's parent to "None" (or itself)
-    parentMap[0][0] = {0, 0};
+    //Set the Start Cell's parent to itself
+    parentMap[startingRow][startingCol] = {startingRow, startingCol};
 
     exit = {(int)maze.grid.size()-1, (int)maze.grid[0].size()-1};
+    PathFound = false;
 }
 
 void BreadthFirstSearch::Solve(Grid &maze) {
     //Repeat this cycle until the Queue is empty or the End is found.
-    if(!frontier.empty()){
+    if(!frontier.empty() && !PathFound){
         //Dequeue
-        Grid::CellPosition *pCurrentCell = &frontier.front();
+        Grid::CellPosition currentCell = frontier.front();
         frontier.pop();
 
-        maze.grid[pCurrentCell->row][pCurrentCell->col].color = {108, 117, 148, 255};
+        maze.grid[currentCell.row][currentCell.col].color = {108, 117, 148, 255};
 
         //Check Victory
-        if(pCurrentCell->row == exit.row && pCurrentCell->col == exit.col){
-            maze.Solved = true;
+        if(currentCell.row == exit.row && currentCell.col == exit.col){
+            PathFound = true;
+            cursor = {currentCell.row, currentCell.col};
         }
 
         if(!maze.Solved){
             //? Expand "The Wave"
             //Scan and Process Neighbors
-            vector<Grid::Position> v = maze.UnvisitedNeighbours(pCurrentCell->row, pCurrentCell->col);
-
+            vector<Grid::Position> v = maze.UnvisitedNeighbours(currentCell.row, currentCell.col);
+            
+            
             for(Grid::Position p : v){
-                int neighbourRow = pCurrentCell->row;
-                int neighbourCol = pCurrentCell->col;
+                int neighbourRow = currentCell.row;
+                int neighbourCol = currentCell.col;
+                bool validNeighbour = false;
 
                 switch (p){
                     case Grid::Position::LEFT:
                         neighbourCol--;
+                        if(!maze.grid[currentCell.row][currentCell.col].leftWall && !maze.grid[neighbourRow][neighbourCol].rightWall){
+                            validNeighbour = true;
+                        }
                     break;
                         
                     case Grid::Position::UP:
                         neighbourRow--;
+                        if(!maze.grid[currentCell.row][currentCell.col].topWall && !maze.grid[neighbourRow][neighbourCol].bottomWall){
+                            validNeighbour = true;
+                        }
                     break;
 
                     case Grid::Position::RIGHT:
                         neighbourCol++;
+                        if(!maze.grid[currentCell.row][currentCell.col].rightWall && !maze.grid[neighbourRow][neighbourCol].leftWall){
+                            validNeighbour = true;
+                        }
                     break;
                     
                     case Grid::Position::DOWN:
                         neighbourRow++;
+                        if(!maze.grid[currentCell.row][currentCell.col].bottomWall && !maze.grid[neighbourRow][neighbourCol].topWall){
+                            validNeighbour = true;
+                        }
                     break;
                 }
-                //Mark Visited
-                maze.grid[neighbourRow][neighbourCol].visited = true;
-                maze.grid[neighbourRow][neighbourCol].color = {46, 52, 230, 255};
-                //Set Parent
-                parentMap[neighbourRow][neighbourCol] = {pCurrentCell->row, pCurrentCell->col};
-                //Enqueue
-                frontier.push({neighbourRow, neighbourCol});
+                if(validNeighbour){
+                    //Mark Visited
+                    maze.grid[neighbourRow][neighbourCol].visited = true;
+                    maze.grid[neighbourRow][neighbourCol].color = {46, 52, 230, 255};
+                    //Set Parent
+                    parentMap[neighbourRow][neighbourCol] = {currentCell.row, currentCell.col};
+                    //Enqueue
+                    frontier.push({neighbourRow, neighbourCol});
+                }
+
             }
-
-            //? Trace the Path
-
         }
+    }else if(PathFound){
+        //? Trace the Path
+        Grid::CellPosition parentCell = parentMap[cursor.row][cursor.col];
+
+        if(cursor.row == parentCell.row && cursor.col == parentCell.col){   //if reached starting cell
+            maze.Solved = true; //done
+        }else{
+            //trace path
+            maze.solvePath.push_back({cursor, parentCell});
+            //move closer to starting Cell
+            cursor = parentCell;
+        }
+
     }
 }

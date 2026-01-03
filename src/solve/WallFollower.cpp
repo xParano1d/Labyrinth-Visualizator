@@ -1,8 +1,7 @@
 #include "WallFollower.h"
 
 void WallFollower::Init(int startingRow, int startingCol, Grid &maze) {
-    maze.ClearSolution();
-
+    
     currentRow = startingRow;
     currentCol = startingCol;
     
@@ -12,7 +11,6 @@ void WallFollower::Init(int startingRow, int startingCol, Grid &maze) {
     maze.grid[startingRow][startingCol].color = {108, 117, 148, 255};
     currentDirection = Grid::Position::DOWN;
 
-    maze.Solved = false;
 }
 
 void WallFollower::Solve(Grid &maze) {

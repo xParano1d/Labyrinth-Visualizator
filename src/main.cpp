@@ -22,7 +22,7 @@ int main() {
     int startingRow = 0;
     int startingCol = 0;
 
-    float vSpeed = 60;     //visualization speed 
+    float vSpeed = 30;     //visualization speed 
     vSpeed = 1 / vSpeed;    //heighest value -> faster
     
 
@@ -115,7 +115,7 @@ int main() {
                     algType = false;
                 break;
             }
-
+    
             if(!gui.ready){
                 if(algType){        //GENERATION
                     gui.genIterations = 0;
@@ -124,6 +124,8 @@ int main() {
                     gui.genTime = 0;
                     genTime = GetTime();
                 }else{              //SOLVING
+                    grid.ClearSolution();
+
                     gui.solveIterations = 0;
                     gui.solveIterations++;
 
@@ -209,8 +211,11 @@ int main() {
                             gui.solveIterations++;
                             delay = GetTime();
                         }else{
-                            gui.ready = true;
-                            gui.choosenAlgorithm = Gui::Algorithm::None;
+                            if(GetTime()-delay > vSpeed*3){
+                                gui.ready = true;
+                                gui.choosenAlgorithm = Gui::Algorithm::None;
+                                grid.ChangeEveryCellColor(WHITE);
+                            }
                         }
                     }
                 break;

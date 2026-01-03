@@ -4,6 +4,10 @@
 void Grid::ClearSolution() {
     solvePath.clear();
     deadEndPath.clear();
+
+    Solved = false;
+
+    ChangeEveryCellColor(WHITE);
 }
 
 void Grid::Create(int rows, int columns) {
@@ -89,7 +93,7 @@ void Grid::Display() {
     //? Background of a Grid
     DrawRectangle(posX-borderThickness, posY-borderThickness/aspectRatio, width+2*borderThickness, height+2*(borderThickness/aspectRatio), WHITE);
     
-    //Drawing Grid
+    //! Drawing Grid
     float startPosX = posX;
     for (int i = 0; i < this->rows; i++){
         for (int j = 0; j < this->columns; j++){
@@ -134,6 +138,13 @@ void Grid::Display() {
             DrawLineEx({AX, AY}, {BX, BY}, 6, {27, 227, 84, 255});
         }
     }
+    if(Solved){     //* two Green lines
+        //*     from    the top edge of maze   to   the starting point of path
+        DrawLineEx({posX+cellCenterX, posY}, {posX+cellCenterX, posY+cellCenterY}, 6, {27, 227, 84, 255});
+
+        //*     from    ending point of path   to   the bottom edge of maze
+        DrawLineEx({posX+width-cellCenterX, height}, {posX+width-cellCenterX, posY+height}, 6, {27, 227, 84, 255});
+    }
 
     if(!deadEndPath.empty()){   //Grey Path
         for(Section sect : deadEndPath){
@@ -148,7 +159,7 @@ void Grid::Display() {
         }
     }
 
-    //Row Highlighting
+    //! Row Highlighting
     if(highlightRowEnabled){
         DrawRectangle(posX, posY+highlightedRow*offsetY, width, offsetY, highlightColor);
     }
