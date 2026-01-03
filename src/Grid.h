@@ -13,9 +13,7 @@ class Grid {
         struct CellPosition {
             int row;
             int col;
-
         };
-        vector<CellPosition> stack;
 
         struct Section{
             CellPosition A;
@@ -49,7 +47,17 @@ class Grid {
 
             bool visited = false;
 
-            int groupID = 0; 
+
+            int groupID = 0;
+            
+            int wallCount(){
+                int count = 0;
+                if(rightWall) count++;
+                if(leftWall) count++;
+                if(topWall) count++;
+                if(bottomWall) count++;
+                return count;
+            };
         };
         vector<vector<Cell>> grid;
         

@@ -1,19 +1,20 @@
 #include "Backtracking.h"
 
 void Backtracking::Init(int startingRow, int startingCol, Grid& maze) {
+    cellStack.clear();
     //Choose the initial cell, mark it as visited and push it to the stack
     maze.grid[startingRow][startingCol].visited = true;
     maze.grid[startingRow][startingCol].color = {108, 117, 148, 255};
-    maze.stack.push_back({startingRow, startingCol});
+    cellStack.push_back({startingRow, startingCol});
 }
 
 void Backtracking::Generate(Grid &maze) {
-    if(!maze.stack.empty()){    //repeat until
+    if(!cellStack.empty()){    //repeat until
         ////While the stack is not empty (recursive)
         //one iteration:
-        int currentRow = maze.stack.back().row;
-        int currentCol = maze.stack.back().col;
-        maze.stack.pop_back();
+        int currentRow = cellStack.back().row;
+        int currentCol = cellStack.back().col;
+        cellStack.pop_back();
     
     
         Grid::Position neighbourPos;
@@ -23,7 +24,7 @@ void Backtracking::Generate(Grid &maze) {
         if(!v.empty()){
     
             //Push the current cell to the stack
-            maze.stack.push_back({currentRow, currentCol});
+            cellStack.push_back({currentRow, currentCol});
             
             int neighbourRow = currentRow;
             int neighbourCol = currentCol;
@@ -82,7 +83,7 @@ void Backtracking::Generate(Grid &maze) {
             //Mark the chosen cell as visited and push it to the stack
             maze.grid[neighbourRow][neighbourCol].visited = true;
             maze.grid[neighbourRow][neighbourCol].color = {108, 117, 148, 255};
-            maze.stack.push_back({neighbourRow, neighbourCol});
+            cellStack.push_back({neighbourRow, neighbourCol});
             
         }else{
             maze.grid[currentRow][currentCol].color  = {27, 227, 84, 255};

@@ -25,7 +25,7 @@ void Kruskal::Init(Grid &maze) {
 }
 
 void Kruskal::Generate(Grid &maze) {
-    if(!Kruskal::edgeList.empty()){ //repeat until
+    if(!edgeList.empty()){ //repeat until
 
         //Select and Remove an edge from the list at random.
         int random = GetRandomValue(0, (int)edgeList.size()-1);
