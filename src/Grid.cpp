@@ -141,7 +141,7 @@ void Grid::Display() {
         DrawLineEx({posX+cellCenterX, posY}, {posX+cellCenterX, posY+cellCenterY}, 6, {27, 227, 84, 255});
 
         //*     from    ending point of path   to   the bottom edge of maze
-        DrawLineEx({posX+width-cellCenterX, height}, {posX+width-cellCenterX, posY+height}, 6, {27, 227, 84, 255});
+        DrawLineEx({posX+width-cellCenterX, posY+height}, {posX+width-cellCenterX, posY+height-cellCenterY}, 6, {27, 227, 84, 255});
     }
 
     if(!deadEndPath.empty()){   //Grey Path

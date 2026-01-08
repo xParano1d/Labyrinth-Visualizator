@@ -17,8 +17,8 @@ int main() {
     constexpr int screenHeight = 600;
 
     //settings
-    int gridWidth = 10;
-    int gridHeight = 10;
+    int gridWidth = 30;
+    int gridHeight = 30;
 
     int startingRow = 0;
     int startingCol = 0;
@@ -26,7 +26,7 @@ int main() {
     int endingRow = gridHeight-1;
     int endingCol = gridWidth-1;
 
-    float vSpeed = 20;     //visualization speed 
+    float vSpeed = 100;     //visualization speed 
     vSpeed = 1 / vSpeed;    //heighest value -> faster
     
 

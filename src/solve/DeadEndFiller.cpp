@@ -137,9 +137,6 @@ void DeadEndFiller::Solve(Grid &maze) {
                         maze.grid[neighbourRow][neighbourCol].color = {108, 117, 148, 255};
                         // and push it back to the stack
                         deadEnd.push_back({neighbourRow, neighbourCol});
-                    }else{
-                        // we are in the hallway
-                        
                     }
                 }
             }
@@ -152,8 +149,9 @@ void DeadEndFiller::Solve(Grid &maze) {
             Grid::CellPosition neighbourCell = currentCell;
             //where can i go?
             vector<Grid::Position> v = maze.UnvisitedNeighbours(currentCell);
-            for(Grid::Position p : v){
-                switch (p){
+            while(neighbourCell==currentCell){
+
+                switch (v.back()){
                     case Grid::Position::LEFT:
                         if(!maze.grid[currentCell.row][currentCell.col].leftWall){
                             neighbourCell.col--;
@@ -178,14 +176,19 @@ void DeadEndFiller::Solve(Grid &maze) {
                         }
                     break;
                 }
-                if(neighbourCell!=currentCell){
-                    //mark as visited
-                    maze.grid[neighbourCell.row][neighbourCell.col].visited = true;
-                    //add path to stack
-                    maze.solvePath.push_back({currentCell, neighbourCell});
-                    currentCell = neighbourCell;
+                if(neighbourCell==currentCell){
+                    v.pop_back();
                 }
             }
+
+            //mark as visited
+            maze.grid[neighbourCell.row][neighbourCell.col].visited = true;
+
+            //add path to stack
+            maze.solvePath.push_back({currentCell, neighbourCell});
+            currentCell = neighbourCell;
+
+
         }else{
             //path done:
             maze.Solved = true;
