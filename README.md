@@ -26,7 +26,7 @@ TODO:
             ✔ Wall Follower @done (12/27/2025, 7:27:26 PM)
             ✔ Breadth First Search (BFS) @done (1/3/2026, 3:19:26 PM)
             ✘ Pledge @cancelled (1/3/2026, 3:41:14 PM)
-            ☐ Dead End Filler
+            ✔ Dead End Filler @done (1/8/2026, 2:26:12 PM)
             ☐ Dijkstra
             ☐ A* (A-Star)
             ☐ Trémaux
@@ -34,8 +34,10 @@ TODO:
 
     Issues to fix:
         ☐ cell walls scaling and overall graphics improvement needed
+        ☐ *?* add cursor color blue to backtracking (maybe)
         ✔ Hunt n' Kill highlighting row one time per iteration @done (12/29/2025, 3:42:55 PM)
         ✔ IsHovered() for selected button should have the same color @done (12/15/2025, 1:26:30 AM)
+
 
 
 

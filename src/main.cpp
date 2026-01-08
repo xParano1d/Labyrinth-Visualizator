@@ -23,7 +23,10 @@ int main() {
     int startingRow = 0;
     int startingCol = 0;
 
-    float vSpeed = 30;     //visualization speed 
+    int endingRow = gridHeight-1;
+    int endingCol = gridWidth-1;
+
+    float vSpeed = 20;     //visualization speed 
     vSpeed = 1 / vSpeed;    //heighest value -> faster
     
 
@@ -90,18 +93,18 @@ int main() {
 
 
                 case (Gui::Algorithm::WallFollower):
-                    WallFollower::Init(0, 0, grid);
+                    WallFollower::Init(startingRow, startingCol, grid);
                     algType = false;
                 break;
 
                 case (Gui::Algorithm::BreadthFirstSearch):
-                    BreadthFirstSearch::Init(0, 0, grid);
+                    BreadthFirstSearch::Init(startingRow, startingCol, grid);
                     algType = false;
                 break;
                 
                 case (Gui::Algorithm::DeadEndFiller):
+                    DeadEndFiller::Init(startingRow, startingCol, endingRow, endingCol, grid);
                     algType = false;
-                    std::cout << "test" << std::endl;
                 break;
                 
                 case (Gui::Algorithm::Dijkstra):
@@ -119,12 +122,12 @@ int main() {
             
             if(!gui.ready){
                 if(algType){        //GENERATION
-
                     gui.genIterations = 0;
                     gui.genIterations++;
 
                     gui.genTime = 0;
                     genTime = GetTime();
+
                 }else{              //SOLVING
                     grid.ClearSolution();
 
@@ -219,10 +222,10 @@ int main() {
             
             //if        generated          or            solved
             if((grid.generated && algType) || (grid.Solved && !algType)){
-                if(GetTime()-delay > vSpeed*3){
+                if(GetTime()-delay > 1){
                     grid.ChangeEveryCellColor(WHITE);
-                    gui.ready = true;
                     gui.choosenAlgorithm = Gui::Algorithm::None;
+                    gui.ready = true;
                 }
             }else{
                 if(GetTime()-delay > vSpeed){
@@ -233,13 +236,11 @@ int main() {
                         gui.solveIterations++;
                     }
                 }
-            }
-            
-
-            if(algType){
-                gui.genTime = GetTime() - genTime;
-            }else{
-                gui.solveTime = GetTime() - solveTime;
+                if(algType){
+                    gui.genTime = GetTime() - genTime;
+                }else{
+                    gui.solveTime = GetTime() - solveTime;
+                }
             }
         }
 

@@ -13,6 +13,13 @@ class Grid {
         struct CellPosition {
             int row;
             int col;
+
+            bool operator==(const CellPosition& other) const{
+                return (row == other.row && col == other.col);
+            }
+            bool operator!=(const CellPosition& other) const{
+                return !(*this==other); //using == and negating 
+            }
         };
 
         struct Section{
@@ -72,6 +79,7 @@ class Grid {
         
         vector<CellPosition> GetUnvisitedNeighboursPosition(int cellRow, int cellCol);
         vector<Position> UnvisitedNeighbours(int cellRow, int cellCol);
+        vector<Position> UnvisitedNeighbours(CellPosition cell);
         vector<Position> VisitedNeighbours(int cellRow, int cellCol);
         int UnvisitedCount();
 

@@ -30,6 +30,7 @@ void BreadthFirstSearch::Solve(Grid &maze) {
         frontier.pop();
 
         maze.grid[currentCell.row][currentCell.col].color = {108, 117, 148, 255};
+        
 
         //Check Victory
         if(currentCell.row == exit.row && currentCell.col == exit.col){
@@ -40,7 +41,7 @@ void BreadthFirstSearch::Solve(Grid &maze) {
         if(!maze.Solved){
             //? Expand "The Wave"
             //Scan and Process Neighbors
-            vector<Grid::Position> v = maze.UnvisitedNeighbours(currentCell.row, currentCell.col);
+            vector<Grid::Position> v = maze.UnvisitedNeighbours(currentCell);
             
             
             for(Grid::Position p : v){

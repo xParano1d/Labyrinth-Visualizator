@@ -213,6 +213,31 @@ vector<Grid::Position> Grid::UnvisitedNeighbours(int cellRow, int cellCol) {
     return v;
 }
 
+vector<Grid::Position> Grid::UnvisitedNeighbours(CellPosition cell) {
+    vector<Position> v;
+    if(cell.col > 0 && cell.col < (int)grid[cell.row].size()){         //Left
+        if (!grid[cell.row][cell.col - 1].visited) {
+            v.push_back(LEFT);
+        }
+    }
+    if(cell.row > 0 && cell.row < (int)grid.size()){                  //Up
+        if(!grid[cell.row-1][cell.col].visited){
+            v.push_back(UP);
+        }
+    }
+    if(cell.col+1 > 0  && cell.col+1 < (int)grid[cell.row].size()){    //Right
+        if(!grid[cell.row][cell.col+1].visited){
+            v.push_back(RIGHT);
+        }
+    }
+    if(cell.row+1 > 0 && cell.row+1 < (int)grid.size()){              //Down
+        if(!grid[cell.row+1][cell.col].visited){
+            v.push_back(DOWN);
+        }
+    }
+    return v;
+}
+
 vector<Grid::Position> Grid::VisitedNeighbours(int cellRow, int cellCol) {
     vector<Position> v;
     if(cellCol > 0 && cellCol < (int)grid[cellRow].size()){         //Left
