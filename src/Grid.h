@@ -75,6 +75,7 @@ class Grid {
         void HighlightRow(int row, Color c);
         
         void ChangeGroupsID(int fromID, int toID);
+        void ChangeCellColorWithID(int id, Color color);
         void UnvisitEveryCell();
         
         vector<CellPosition> GetUnvisitedNeighboursPosition(int cellRow, int cellCol);

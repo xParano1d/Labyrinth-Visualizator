@@ -10,6 +10,7 @@ TODO:
         ✔ Gui Gen iterations @done (11/11/2025, 7:22:12 PM)
         ✔ Gui Solve time @done (12/14/2025, 8:02:50 PM)
         ✔ Gui Solve iterations @done (12/14/2025, 8:02:52 PM)
+        ☐ solve/gen time seconds -> minutes if needed
         ☐ save as gif/png
         ☐ create an icon image for .exe file
 
@@ -27,7 +28,8 @@ TODO:
             ✔ Breadth First Search (BFS) @done (1/3/2026, 3:19:26 PM)
             ✘ Pledge @cancelled (1/3/2026, 3:41:14 PM)
             ✔ Dead End Filler @done (1/8/2026, 2:26:12 PM)
-            ☐ Dijkstra
+            ✘ Dijkstra @cancelled (1/9/2026, 12:59:50 AM)
+            ✔ Depth First Search (Backtracking) @done (1/9/2026, 8:36:27 PM)
             ☐ A* (A-Star)
             ☐ Trémaux
 
