@@ -1,17 +1,16 @@
 #pragma once
-#include <queue>
 #include "../Grid.h"
 
-class BreadthFirstSearch {
+class DepthFirstSearch {
     private:
-        inline static queue<Grid::CellPosition> frontier;
+        inline static vector<Grid::CellPosition> cellStack;
         inline static vector<vector<Grid::CellPosition>> parentMap;
+
         inline static Grid::CellPosition exit;
 
         inline static bool PathFound;
         inline static Grid::CellPosition cursor;
-
     public:
-        static void Init(int startingRow, int startingCol,  int exitRow, int exitCol, Grid &maze);
-        static void Solve(Grid& maze);
+        static void Init(int startingRow, int startingCol, int exitRow, int exitCol, Grid& maze);
+        static void Solve(Grid &maze);
 };

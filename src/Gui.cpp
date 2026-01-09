@@ -51,12 +51,12 @@ void Gui::Init() {
     this->solveButtons.resize(6);    //? Number of Buttons for Solve Algorithms
     //Hand On Wall 
     this->solveButtons[0] = Button{GetRectPosX(RIGHT)+12, offsetY * 8, smallBoxWidth-24, offsetY*3, "Wall Follower", WallFollower};
+    //Depth First Search
+    this->solveButtons[1] = Button{GetRectPosX(RIGHT)+12, offsetY * 11.5f, smallBoxWidth-24, offsetY*3, "DepthFirstSearch", DepthFirstSearch};
     //Breadth First Search
-    this->solveButtons[1] = Button{GetRectPosX(RIGHT)+12, offsetY * 11.5f, smallBoxWidth-24, offsetY*3, "BreadthFirstSearch", BreadthFirstSearch};
-    //DeadEndFiller
-    this->solveButtons[2] = Button{GetRectPosX(RIGHT)+12, offsetY * 15, smallBoxWidth-24, offsetY*3, "Dead End Filler", DeadEndFiller};
-    //Dijkstra
-    this->solveButtons[3] = Button{GetRectPosX(RIGHT)+12, offsetY * 18.5f, smallBoxWidth-24, offsetY*3, "Dijkstra", Dijkstra};
+    this->solveButtons[2] = Button{GetRectPosX(RIGHT)+12, offsetY * 15, smallBoxWidth-24, offsetY*3, "BreadthFirstSearch", BreadthFirstSearch};
+    //Dead End Filler
+    this->solveButtons[3] = Button{GetRectPosX(RIGHT)+12, offsetY * 18.5f, smallBoxWidth-24, offsetY*3, "Dead End Filler", DeadEndFiller};
     //A*
     this->solveButtons[4] = Button{GetRectPosX(RIGHT)+12, offsetY * 22, smallBoxWidth-24, offsetY*3, "A* (A Star)", AStar};
     //Trémaux

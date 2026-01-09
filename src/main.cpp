@@ -8,6 +8,7 @@
 #include "./gen/Kruskal.h"
 
 #include "./solve/WallFollower.h"
+#include "./solve/DepthFirstSearch.h"
 #include "./solve/BreadthFirstSearch.h"
 #include "./solve/DeadEndFiller.h"
 
@@ -23,8 +24,8 @@ int main() {
     int startingRow = 0;
     int startingCol = 0;
 
-    int endingRow = gridHeight-1;
-    int endingCol = gridWidth-1;
+    int exitRow = gridHeight-1;
+    int exitCol = gridWidth-1;
 
     float vSpeed = 100;     //visualization speed 
     vSpeed = 1 / vSpeed;    //heighest value -> faster
@@ -35,13 +36,14 @@ int main() {
     Grid grid;
     Gui gui;
 
-    Image icon = LoadImage("./icon.png");
+    Image icon = LoadImage("./icon/icon.png");
     InitWindow(screenWidth, screenHeight, "Labyrinths Visualization");
     SetWindowIcon(icon);
+    UnloadImage(icon);
+
     SetTargetFPS(60);
     SetRandomSeed((unsigned int)time(NULL));
-
-    UnloadImage(icon);
+    
 
     double delay;
     double genTime;
@@ -62,7 +64,7 @@ int main() {
             gui.choosenAlgorithm = gui.MainButtonHandler();
 
             switch(gui.choosenAlgorithm){
-                case (Gui::Algorithm::Backtracking):
+                case (Gui::Algorithm::Backtracking): //DFS (gen)
                     grid.Create(gridHeight, gridWidth);
                     Backtracking::Init(startingRow, startingCol, grid);
                     algType = true;
@@ -96,18 +98,19 @@ int main() {
                     WallFollower::Init(startingRow, startingCol, grid);
                     algType = false;
                 break;
+                
+                case (Gui::Algorithm::DepthFirstSearch):
+                    DepthFirstSearch::Init(startingRow, startingCol, exitRow, exitCol, grid);
+                    algType = false;
+                break;
 
                 case (Gui::Algorithm::BreadthFirstSearch):
-                    BreadthFirstSearch::Init(startingRow, startingCol, grid);
+                    BreadthFirstSearch::Init(startingRow, startingCol, exitRow, exitCol, grid);
                     algType = false;
                 break;
                 
                 case (Gui::Algorithm::DeadEndFiller):
-                    DeadEndFiller::Init(startingRow, startingCol, endingRow, endingCol, grid);
-                    algType = false;
-                break;
-                
-                case (Gui::Algorithm::Dijkstra):
+                    DeadEndFiller::Init(startingRow, startingCol, exitRow, exitCol, grid);
                     algType = false;
                 break;
                 
@@ -187,7 +190,15 @@ int main() {
                         }
                     }
                 break;
-
+                    
+                case (Gui::Algorithm::DepthFirstSearch):
+                    if(GetTime()-delay > vSpeed){
+                        if(!grid.Solved){
+                            DepthFirstSearch::Solve(grid);
+                        }
+                    }
+                break;
+                    
                 case (Gui::Algorithm::BreadthFirstSearch):
                     if(GetTime()-delay > vSpeed){
                         if(!grid.Solved){
@@ -202,10 +213,6 @@ int main() {
                             DeadEndFiller::Solve(grid);
                         }
                     }
-                break;
-                    
-                case (Gui::Algorithm::Dijkstra):
-                    grid.Solved = true;
                 break;
                 
                 case (Gui::Algorithm::AStar):  

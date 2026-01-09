@@ -372,7 +372,7 @@ OBJ_DIR = obj
 # Define all object files from source files
 SRC = $(call rwildcard, *.c, *.h)
 #OBJS = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
-OBJS ?= main.cpp icon.o
+OBJS ?= main.cpp icon/icon.o
 
 # For Android platform we call a custom Makefile.Android
 ifeq ($(PLATFORM),PLATFORM_ANDROID)
@@ -422,5 +422,5 @@ endif
 	@echo Cleaning done
 
 # Rule to compile the resource file
-icon.o: icon.rc
-	windres icon.rc -o icon.o
+icon/icon.o: icon/icon.rc
+	windres icon/icon.rc -o icon/icon.o

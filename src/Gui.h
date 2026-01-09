@@ -31,7 +31,7 @@ class Gui {
             WallFollower,
             BreadthFirstSearch,
             DeadEndFiller,
-            Dijkstra,
+            DepthFirstSearch,
             AStar,
             Tremaux
         };

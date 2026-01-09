@@ -3,7 +3,7 @@
 #include <iostream>
 using namespace std;
 
-void BreadthFirstSearch::Init(int startingRow, int startingCol, Grid &maze) {
+void BreadthFirstSearch::Init(int startingRow, int startingCol, int exitRow, int exitCol, Grid &maze) {
     maze.UnvisitEveryCell();
     while(!frontier.empty()){
         frontier.pop();
@@ -18,7 +18,7 @@ void BreadthFirstSearch::Init(int startingRow, int startingCol, Grid &maze) {
     //Set the Start Cell's parent to itself
     parentMap[startingRow][startingCol] = {startingRow, startingCol};
 
-    exit = {(int)maze.grid.size()-1, (int)maze.grid[0].size()-1};
+    exit = {exitRow, exitCol};
     PathFound = false;
 }
 
@@ -33,7 +33,7 @@ void BreadthFirstSearch::Solve(Grid &maze) {
         
 
         //Check Victory
-        if(currentCell.row == exit.row && currentCell.col == exit.col){
+        if(currentCell == exit){
             PathFound = true;
             cursor = {currentCell.row, currentCell.col};
         }
@@ -94,7 +94,7 @@ void BreadthFirstSearch::Solve(Grid &maze) {
         //? Trace the Path
         Grid::CellPosition parentCell = parentMap[cursor.row][cursor.col];
 
-        if(cursor.row == parentCell.row && cursor.col == parentCell.col){   //if reached starting cell
+        if(cursor == parentCell){   //if reached starting cell
             maze.Solved = true; //done
         }else{
             //trace path
