@@ -20,7 +20,7 @@ TODO:
             ✔ Hunt n' kill @done (12/11/2025, 5:31:01 PM)
             ✔ Prim @done (12/13/2025, 6:13:14 PM)
             ✔ Kruskal @done (12/14/2025, 12:22:27 AM)
-            ☐ Eller?
+            ✔ Eller? @done (1/22/2026, 6:46:31 PM)
             ☐ Sidewinder
 
         Solve:
@@ -39,6 +39,7 @@ TODO:
         ☐ *?* add cursor color blue to backtracking (maybe)
         ✔ Hunt n' Kill highlighting row one time per iteration @done (12/29/2025, 3:42:55 PM)
         ✔ IsHovered() for selected button should have the same color @done (12/15/2025, 1:26:30 AM)
+        ☐ fix solvePath thickness
 
 
 

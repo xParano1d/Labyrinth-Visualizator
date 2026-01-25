@@ -2,7 +2,9 @@
 #pragma once
 #include <raylib.h>
 #include <vector>
+#include <cmath>
 using std::vector;
+
 class Gui {
     private:
         enum Context {
@@ -10,12 +12,15 @@ class Gui {
             CENTER,
             RIGHT
         };
-    public:
-        float screenWidth;
-        float screenHeight;
-
+        int &mazeGridWidth;
+        int &mazeGridHeight;
         void Init();
+    public:
+    
         void Display();
+        Gui(int &gridHeight, int &gridWidth) : mazeGridWidth(gridWidth), mazeGridHeight(gridHeight) {
+            Init();
+        };
 
         enum Algorithm {
             //Gen
@@ -26,6 +31,7 @@ class Gui {
             Kruskal,
             Eller,
             Sidewinder,
+            Random,
 
             //Solve
             WallFollower,
@@ -75,7 +81,12 @@ class Gui {
 
             void Display(){
                 DrawRectangleRounded({posX, posY, width, height}, 0.3, 3, buttonColor);
-                float fontSize = height * 0.54f;
+                float fontSize = height * 0.56f;
+                DrawText(text, posX+width/2 - MeasureText(text, fontSize)/2, posY+height*0.26f, fontSize, textColor);
+            }
+            void DisplayRectangle(){
+                DrawRectangle(posX, posY, width, height, buttonColor);
+                float fontSize = height * 0.08f;
                 DrawText(text, posX+width/2 - MeasureText(text, fontSize)/2, posY+height*0.26f, fontSize, textColor);
             }
             void ChangeColor(Color buttonC, Color textC){
@@ -106,4 +117,6 @@ class Gui {
         vector<Button> solveButtons;
         Button ChosenSolve;
         Button StartSolvingButton;
+
+        Button MazeSettings;
 };

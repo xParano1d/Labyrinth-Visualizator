@@ -1,5 +1,4 @@
 #include "Maze.h"
-#include <raylib.h>
 
 void Maze::ClearSolution() {
     solvePath.clear();
@@ -98,6 +97,7 @@ void Maze::Display() {
 
 
     float borderThickness = 8;
+    float wallThickness = 2;
 
     //? Background of a Grid
     DrawRectangle(posX-borderThickness, posY-borderThickness/aspectRatio, width+2*borderThickness, height+2*(borderThickness/aspectRatio), WHITE);
@@ -107,19 +107,20 @@ void Maze::Display() {
     for (int i = 0; i < this->rows; i++){
         for (int j = 0; j < this->columns; j++){
             
-            DrawRectangle(posX, posY, offsetX, offsetY, grid[i][j].color);  //* Background of a Cell
+            //* Background of a Cell
+            DrawRectangle(posX, posY, ceil(offsetX), ceil(offsetY), grid[i][j].color);
 
             if(this->grid[i][j].rightWall){
-                DrawLineEx({posX+offsetX, posY}, {posX+offsetX, posY+offsetY}, 2, BLACK);//! Right Wall
+                DrawRectangle(posX+offsetX-wallThickness/2, posY, wallThickness, offsetY+wallThickness/2, BLACK);   //! Right Wall
             }
             if(this->grid[i][j].leftWall){
-                DrawLineEx({posX, posY}, {posX, posY+offsetY}, 2, BLACK);                //! Left Wall
+                DrawRectangle(posX-wallThickness/2, posY, wallThickness, offsetY+wallThickness/2, BLACK);           //! Left Wall
             }
             if(this->grid[i][j].topWall){
-                DrawLineEx({posX, posY}, {posX+offsetX, posY}, 2, BLACK);                //! Top Wall
+                DrawRectangle(posX, posY-wallThickness/2, offsetX+wallThickness/2, wallThickness, BLACK);           //! Top Wall
             }
             if(this->grid[i][j].bottomWall){
-                DrawLineEx({posX, posY+offsetY}, {posX+offsetX, posY+offsetY}, 2, BLACK);//! Bottom Wall
+                DrawRectangle(posX, posY+offsetY-wallThickness/2, offsetY+wallThickness/2, wallThickness, BLACK);   //! Bottom Wall
             }
             
             posX = posX + offsetX;
@@ -134,6 +135,8 @@ void Maze::Display() {
     float cellCenterX = offsetX / 2;
     float cellCenterY = offsetY / 2;
 
+    float pathThickness = 6;
+
     //Drawing Solution
     if(!solvePath.empty()){     //* Green Path (Solution)
         for(Section sect : solvePath){
@@ -144,15 +147,15 @@ void Maze::Display() {
             float BX = posX + cellCenterX + sect.B.col * offsetX;
             float BY = posY + cellCenterY + sect.B.row * offsetY;
             
-            DrawLineEx({AX, AY}, {BX, BY}, 6, {27, 227, 84, 255});
+            DrawLineEx({AX, AY}, {BX, BY}, pathThickness, {27, 227, 84, 255});
         }
     }
     if(Solved){     //* two Green lines
         //*     from    the top edge of maze   to   the starting point of path
-        DrawLineEx({posX+cellCenterX, posY}, {posX+cellCenterX, posY+cellCenterY}, 6, {27, 227, 84, 255});
+        DrawLineEx({posX+cellCenterX, posY}, {posX+cellCenterX, posY+cellCenterY}, pathThickness, {27, 227, 84, 255});
 
         //*     from    ending point of path   to   the bottom edge of maze
-        DrawLineEx({posX+width-cellCenterX, posY+height}, {posX+width-cellCenterX, posY+height-cellCenterY}, 6, {27, 227, 84, 255});
+        DrawLineEx({posX+width-cellCenterX, posY+height}, {posX+width-cellCenterX, posY+height-cellCenterY}, pathThickness, {27, 227, 84, 255});
     }
 
     if(!deadEndPath.empty()){   //Grey Path
@@ -164,7 +167,7 @@ void Maze::Display() {
             float BX = posX + cellCenterX + sect.B.col * offsetX;
             float BY = posY + cellCenterY + sect.B.row * offsetY;
             
-            DrawLineEx({AX, AY}, {BX, BY}, 6, {108, 117, 148, 255});
+            DrawLineEx({AX, AY}, {BX, BY}, pathThickness, {108, 117, 148, 255});
         }
     }
 

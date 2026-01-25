@@ -1,16 +1,12 @@
 #include "Gui.h"
-#include <raylib.h>
 
 void Gui::Init() {
-    this->screenWidth = GetScreenWidth();
-    this->screenHeight = GetScreenHeight();
-    
     //Boxes settings
-    this->offsetX = screenWidth * 0.01;         // x4 on width
-    this->offsetY = screenHeight * 0.02;        // x2   on height
-    float smallBoxWidth = screenWidth * 0.2;   // x2 on width
-    float bigBoxWidth = screenWidth * 0.56;     // x1 on width
-    float boxHeight = screenHeight * 0.96;      // x1   on height
+    this->offsetX = GetScreenWidth() * 0.01;         // x4 on width
+    this->offsetY = GetScreenHeight() * 0.02;        // x2   on height
+    float smallBoxWidth = GetScreenWidth() * 0.2;   // x2 on width
+    float bigBoxWidth = GetScreenWidth() * 0.56;     // x1 on width
+    float boxHeight = GetScreenHeight() * 0.96;      // x1   on height
 
     this->ChosenGen.alg = None;
 
@@ -18,7 +14,7 @@ void Gui::Init() {
     LeftContext = {offsetX, offsetY, smallBoxWidth, boxHeight};
 
 
-    this->genButtons.resize(6);    //? Number of Buttons for Generation Algorithms
+    this->genButtons.resize(7);    //? Number of Buttons for Generation Algorithms
     //Recursive Backtrack
     this->genButtons[0] = Button{GetRectPosX(LEFT)+12, offsetY * 8, smallBoxWidth-24, offsetY*3, "Backtracking", Backtracking};
     //Hunt n' Kill
@@ -32,20 +28,21 @@ void Gui::Init() {
     //Sidewinder
     this->genButtons[5] = Button{GetRectPosX(LEFT)+12, offsetY * 25.5f, smallBoxWidth-24, offsetY*3, "Sidewinder", Sidewinder};
 
-    //Generate Button
-    this->StartGenButton = {GetRectPosX(LEFT)+8, screenHeight-offsetY*5, smallBoxWidth-16, offsetY*3, "Start Generating"};
+    this->genButtons[6] = Button{GetRectPosX(LEFT)+12, offsetY * 29, smallBoxWidth-24, offsetY*3, "Random", Random};
 
+    //Generate Button
+    this->StartGenButton = {GetRectPosX(LEFT)+8, GetScreenHeight()-offsetY*5, smallBoxWidth-16, offsetY*3, "Start Generating"};
 
 
     //Center Box
     CenterContext = {2 * offsetX + smallBoxWidth, offsetY, bigBoxWidth, boxHeight};
     //TODO: Settings button idk where
-
-
-
+    this->MazeSettings = {GetRectPosX(CENTER), GetRectPosY(CENTER), bigBoxWidth, boxHeight, "\nPress Mouse Button\nto Change Settings!"};
+    this->MazeSettings.buttonColor.a = 0;
+    this->MazeSettings.textColor = {27, 227, 84, 255};
 
     //Right Box
-    RightContext = {screenWidth - (smallBoxWidth + offsetX), offsetY, smallBoxWidth, boxHeight};
+    RightContext = {GetScreenWidth() - (smallBoxWidth + offsetX), offsetY, smallBoxWidth, boxHeight};
 
 
     this->solveButtons.resize(6);    //? Number of Buttons for Solve Algorithms
@@ -63,7 +60,7 @@ void Gui::Init() {
     this->solveButtons[5] = Button{GetRectPosX(RIGHT)+12, offsetY * 25.5f, smallBoxWidth-24, offsetY*3, "Trémaux", Tremaux};
 
     //Generate Button
-    this->StartSolvingButton = {GetRectPosX(RIGHT)+8, screenHeight-offsetY*5, smallBoxWidth-16, offsetY*3, "Start Solving"};
+    this->StartSolvingButton = {GetRectPosX(RIGHT)+8, GetScreenHeight()-offsetY*5, smallBoxWidth-16, offsetY*3, "Start Solving"};
 }
 
 Gui::Algorithm Gui::MainButtonHandler() {
@@ -80,7 +77,7 @@ Gui::Algorithm Gui::MainButtonHandler() {
 
 void Gui::Display() {
     DrawRectangleLinesEx(LeftContext, 2, WHITE);
-    DrawText("Generation:", GetRectPosX(LEFT) + (GetRectArea(LEFT).x - MeasureText("Generation:", this->screenWidth*0.02))/2, GetRectPosY(LEFT) + this->offsetY, this->screenWidth*0.02, WHITE);
+    DrawText("Generation:", GetRectPosX(LEFT) + (GetRectArea(LEFT).x - MeasureText("Generation:", GetScreenWidth()*0.02))/2, GetRectPosY(LEFT) + this->offsetY, ceil(GetScreenWidth()*0.02), WHITE);
     
     for(Button btn : this->genButtons){
         if(btn.IsHovered()){                            //hovered
@@ -105,10 +102,10 @@ void Gui::Display() {
 
     //Algorithm elapsed time and genIterations count display
     const char* elapsedGenTime = TextFormat("Time Elapsed: %.2f seconds", genTime);
-    DrawText(elapsedGenTime, GetRectPosX(LEFT) + offsetX, this->screenHeight-(GetRectPosY(LEFT) + this->offsetY*5), this->screenWidth*0.006, WHITE);
+    DrawText(elapsedGenTime, GetRectPosX(LEFT) + offsetX, GetScreenHeight()-(GetRectPosY(LEFT) + this->offsetY*5), GetScreenWidth()*0.0106, WHITE);
 
     const char* genIterationsCount = TextFormat("Generation Step Count: %d", genIterations);
-    DrawText(genIterationsCount, GetRectPosX(LEFT) + offsetX, this->screenHeight-(GetRectPosY(LEFT) + this->offsetY*6), this->screenWidth*0.006, WHITE);
+    DrawText(genIterationsCount, GetRectPosX(LEFT) + offsetX, GetScreenHeight()-(GetRectPosY(LEFT) + this->offsetY*6), GetScreenWidth()*0.0106, WHITE);
 
 
     if(StartGenButton.IsHovered() && choosenAlgorithm == Algorithm::None){  //hovered allowed
@@ -123,11 +120,16 @@ void Gui::Display() {
 
 
     DrawRectangleLinesEx(CenterContext, 2, WHITE);
-
-
+    if(MazeSettings.IsHovered() && choosenAlgorithm == Algorithm::None){
+        MazeSettings.DisplayRectangle();
+    }
+    if(MazeSettings.IsClicked() && choosenAlgorithm == Algorithm::None){
+        mazeGridWidth--;
+        mazeGridHeight--;
+    }
 
     DrawRectangleLinesEx(RightContext, 2, WHITE);
-    DrawText("Solving:", GetRectPosX(RIGHT) + (GetRectArea(LEFT).x - MeasureText("Solving:", this->screenWidth*0.02))/2, GetRectPosY(RIGHT) + this->offsetY, this->screenWidth*0.02, WHITE);
+    DrawText("Solving:", GetRectPosX(RIGHT) + (GetRectArea(LEFT).x - MeasureText("Solving:", GetScreenWidth()*0.02))/2, GetRectPosY(RIGHT) + this->offsetY, GetScreenWidth()*0.02, WHITE);
 
     for(Button btn : this->solveButtons){
         if(btn.IsHovered() && solveReady){                      //hovered
@@ -156,10 +158,10 @@ void Gui::Display() {
     
     //Algorithm elapsed time and solveIterations count display
     const char* elapsedSolveTime = TextFormat("Time Elapsed: %.2f seconds", solveTime);
-    DrawText(elapsedSolveTime, GetRectPosX(RIGHT) + offsetX, this->screenHeight-(GetRectPosY(RIGHT) + this->offsetY*5), this->screenWidth*0.01, WHITE);
+    DrawText(elapsedSolveTime, GetRectPosX(RIGHT) + offsetX, GetScreenHeight()-(GetRectPosY(RIGHT) + this->offsetY*5), GetScreenWidth()*0.0106, WHITE);
 
     const char* solveIterationsCount = TextFormat("Solving Step Count: %d", solveIterations);
-    DrawText(solveIterationsCount, GetRectPosX(RIGHT) + offsetX, this->screenHeight-(GetRectPosY(RIGHT) + this->offsetY*6), this->screenWidth*0.01, WHITE);
+    DrawText(solveIterationsCount, GetRectPosX(RIGHT) + offsetX, GetScreenHeight()-(GetRectPosY(RIGHT) + this->offsetY*6), GetScreenWidth()*0.0106, WHITE);
 
 
     if(StartSolvingButton.IsHovered() && choosenAlgorithm == Algorithm::None && solveReady){    //hovered allowed
