@@ -4,6 +4,7 @@ void Maze::ClearSolution() {
     ChangeEveryCellColor(WHITE);
     
     Solved = false;
+    Impossible = false;
     solvePath.clear();
     deadEndPath.clear();
 }

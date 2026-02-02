@@ -14,7 +14,7 @@ TODO:
         ✔ Gui Solve iterations @done (12/14/2025, 8:02:52 PM)
         ☐ solve/gen time seconds -> minutes if needed
         ☐ save as gif/png
-        ☐ create an icon image for .exe file
+        ✔ create an icon image for .exe file @done (2/2/2026, 1:32:02 AM)
 
     Algorithms:
         Gen:
@@ -23,7 +23,7 @@ TODO:
             ✔ Prim @done (12/13/2025, 6:13:14 PM)
             ✔ Kruskal @done (12/14/2025, 12:22:27 AM)
             ✔ Eller? @done (1/22/2026, 6:46:31 PM)
-            ☐ Sidewinder
+            ✔ Sidewinder @done (2/2/2026, 2:35:40 AM)
             ✔ Random Grid @done (2/1/2026, 10:07:33 PM)
 
         Solve:
@@ -34,12 +34,4 @@ TODO:
             ✘ Dijkstra @cancelled (1/9/2026, 12:59:50 AM)
             ✔ Depth First Search (Backtracking) @done (1/9/2026, 8:36:27 PM)
             ✔ A* (A-Star) @done (1/11/2026, 4:37:03 PM)
-            ☐ Trémaux
-
-
-    Issues to fix:
-        ✔ cell walls scaling and overall graphics improvement needed @done (1/31/2026, 4:35:10 AM)
-        ☐ *?* add cursor color blue to backtracking (maybe)
-        ✔ Hunt n' Kill highlighting row one time per iteration @done (12/29/2025, 3:42:55 PM)
-        ✔ IsHovered() for selected button should have the same color @done (12/15/2025, 1:26:30 AM)
-        ✔ fix solvePath thickness @done (1/27/2026, 3:30:42 PM)
+            ☐ Trémaux 

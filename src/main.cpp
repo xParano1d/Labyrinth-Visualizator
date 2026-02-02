@@ -201,6 +201,8 @@ int main() {
                     
                 }else{              //SOLVING
                     maze.ClearSolution();
+                    gui.ImpossibleMessageVisible = false;
+                    
 
                     gui.solveIterations = 0;
                     gui.solveIterations++;
@@ -322,7 +324,6 @@ int main() {
         maze.Display({startRow, startCol}, {exitRow, exitCol});
         gui.Display();
         
-        // DrawText("Prosze polaczycv sie z nigga AI", screenWidth/3+10, 13, 20, GREEN); //! zapytanie o polaczenie z nigga ai
         EndDrawing();
     }
 
