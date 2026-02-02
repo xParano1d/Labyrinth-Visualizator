@@ -102,5 +102,7 @@ void BreadthFirstSearch::Solve(Maze &maze) {
             cursor = parentCell;
         }
 
+    }else{
+        maze.Impossible = true;
     }
 }

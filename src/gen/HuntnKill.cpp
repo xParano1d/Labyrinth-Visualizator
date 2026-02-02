@@ -3,49 +3,52 @@
 void HuntnKill::Hunt(Maze &maze) {
 
     vector<Maze::Direction> v;
-    
     maze.HighlightRow(highlightIterationRow, {27, 227, 84, 255});
-
-    //Scan the grid from the top-left corner to bottom-right
-    if(highlightIterationRow >= 0 && highlightIterationRow < (int)maze.grid.size()){        
-        if(highlightIterationCol >= 0 && highlightIterationCol < (int)maze.grid[highlightIterationRow].size()){
+    if(maze.UnvisitedCount(highlightIterationRow)==0){
+        highlightIterationRow++;
+        highlightIterationCol = 0; 
+    }else{
+        //Scan the grid from the top-left corner to bottom-right
+        if(highlightIterationRow >= 0 && highlightIterationRow < (int)maze.grid.size()){
+            
+            if(highlightIterationCol >= 0 && highlightIterationCol < (int)maze.grid[highlightIterationRow].size()){
+                
+                if(!unvisitedCellFound){
+    
+                    //revert color of highlighted cell
+                    if(pLastCell != nullptr){
+                        pLastCell->color = lastCellColor;
+                        pLastCell = nullptr;
+                    }
+    
+                    //save last cell
+                    pLastCell = &maze.grid[highlightIterationRow][highlightIterationCol];
+                    lastCellColor = maze.grid[highlightIterationRow][highlightIterationCol].color;
+    
+                    //highlight current cell
+                    maze.grid[highlightIterationRow][highlightIterationCol].color = {27, 227, 84, 255};
+    
+    
+                    v = maze.VisitedNeighbours(highlightIterationRow, highlightIterationCol);
+                    if(!maze.grid[highlightIterationRow][highlightIterationCol].visited && v.size() > 0){
+    
+                        unvisitedCellFound = true;
+                    }
+                }
+                
+                if(unvisitedCellFound){
+                    maze.highlightRowEnabled = false;
+                    lastCellColor = {108, 117, 148, 255};
                     
-            if(!unvisitedCellFound){
-
-                //revert color of highlighted cell
-                if(pLastCell != nullptr){
-                    pLastCell->color = lastCellColor;
-                    pLastCell = nullptr;
+                    currentRow = highlightIterationRow;
+                    currentCol = highlightIterationCol;
                 }
-
-                //save last cell
-                pLastCell = &maze.grid[highlightIterationRow][highlightIterationCol];
-                lastCellColor = maze.grid[highlightIterationRow][highlightIterationCol].color;
-
-                //highlight current cell
-                maze.grid[highlightIterationRow][highlightIterationCol].color = {27, 227, 84, 255};
-
-
-                v = maze.VisitedNeighbours(highlightIterationRow, highlightIterationCol);
-                if(!maze.grid[highlightIterationRow][highlightIterationCol].visited && v.size() > 0){
-
-                    unvisitedCellFound = true;
-                }
-            }
-            
-            if(unvisitedCellFound){
-                maze.highlightRowEnabled = false;
-                lastCellColor = {108, 117, 148, 255};
                 
-                currentRow = highlightIterationRow;
-                currentCol = highlightIterationCol;
-                
+                highlightIterationCol++;
+            }else{
+                highlightIterationRow++;
+                highlightIterationCol = 0;
             }
-            
-            highlightIterationCol++;
-        }else{
-            highlightIterationRow++;
-            highlightIterationCol = 0;
         }
 
     }
@@ -83,7 +86,9 @@ void HuntnKill::Hunt(Maze &maze) {
         maze.grid[currentRow][currentCol].visited = true;
         maze.grid[currentRow][currentCol].color = {108, 117, 148, 255};
 
-        pLastCell = nullptr;        
+        pLastCell = nullptr;
+        highlightIterationRow = 0;
+        highlightIterationCol = 0;
     }
 }
 

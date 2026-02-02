@@ -1,5 +1,29 @@
 #include "Gui.h"
 
+const char* Gui::GetAlgorithmName(Gui::Algorithm alg) {
+    switch (alg) {
+        // --- GENERATION ---
+        case Gui::Algorithm::Backtracking:       return "Backtracking";
+        case Gui::Algorithm::HuntNKill:          return "Hunt n' Kill";
+        case Gui::Algorithm::Prim:               return "Prim's Algorithm";
+        case Gui::Algorithm::Kruskal:            return "Kruskal's Algorithm";
+        case Gui::Algorithm::Eller:              return "Eller's Algorithm";
+        case Gui::Algorithm::Sidewinder:         return "Sidewinder";
+        case Gui::Algorithm::Random:             return "Random";
+        
+        // --- SOLVING ---
+        case Gui::Algorithm::WallFollower:       return "Wall Follower";
+        case Gui::Algorithm::DepthFirstSearch:   return "Depth First Search";
+        case Gui::Algorithm::BreadthFirstSearch: return "Breadth First Search";
+        case Gui::Algorithm::DeadEndFiller:      return "Dead End Filler";
+        case Gui::Algorithm::AStar:              return "A* Pathfinding";
+        // case Gui::Algorithm::Tremaux:            return "Tremaux";
+
+        case Gui::Algorithm::None:               return "None";
+        default:                                 return "Unknown";
+    }
+}
+
 void Gui::UpdateData() {
     //Boxes settings
     this->offsetX = GetScreenWidth() * 0.01;         // x4 on width
@@ -47,8 +71,9 @@ void Gui::Init() {
     this->genButtons[4] = Button{GetRectPosX(LEFT)+12, offsetY * 22, smallBoxWidth-24, standardHeight, "Eller", Eller};
     //Sidewinder
     this->genButtons[5] = Button{GetRectPosX(LEFT)+12, offsetY * 25.5f, smallBoxWidth-24, standardHeight, "Sidewinder", Sidewinder};
-
+    //Random
     this->genButtons[6] = Button{GetRectPosX(LEFT)+12, offsetY * 29, smallBoxWidth-24, standardHeight, "Random", Random};
+
 
     //Generate Button
     this->StartGenButton = {GetRectPosX(LEFT)+8, GetScreenHeight()-offsetY*5, smallBoxWidth-16, standardHeight, "Start Generating"};
@@ -63,6 +88,13 @@ void Gui::Init() {
     //Settings Menu section:
     this->gridRowsInput = InputBox(2, 100, mazeGridHeight, 3);
     this->gridColumnsInput = InputBox(2, 100, mazeGridWidth, 3);
+    this->tempCols = mazeGridWidth;
+    this->tempStartC = mazeStartCol;
+    this->tempExitC = mazeExitCol;
+
+    this->startColInput = InputBox(1, mazeGridWidth, mazeStartCol+1);
+    this->exitColInput = InputBox(1, mazeGridWidth, mazeExitCol+1);
+
     this->vSpeedInput = InputBox(1, 10, visualizationSpeed);
 
     this->SaveSettings = Button{GetRectPosX(CENTER)+(GetRectArea(CENTER).x-offsetX*12)/2, GetRectPosY(CENTER)+GetRectArea(CENTER).y-offsetY*5, offsetX*12, offsetY*4, "SAVE"};
@@ -82,8 +114,8 @@ void Gui::Init() {
     this->solveButtons[3] = Button{GetRectPosX(RIGHT)+12, offsetY * 18.5f, smallBoxWidth-24, standardHeight, "Dead End Filler", DeadEndFiller};
     //A*
     this->solveButtons[4] = Button{GetRectPosX(RIGHT)+12, offsetY * 22, smallBoxWidth-24, standardHeight, "A* (A Star)", AStar};
-    //Trémaux
-    this->solveButtons[5] = Button{GetRectPosX(RIGHT)+12, offsetY * 25.5f, smallBoxWidth-24, standardHeight, "Trémaux", Tremaux};
+    //Trémaux NOT IMPLEMENTED
+    // this->solveButtons[5] = Button{GetRectPosX(RIGHT)+12, offsetY * 25.5f, smallBoxWidth-24, standardHeight, "Trémaux", Tremaux};
 
     //Generate Button
     this->StartSolvingButton = {GetRectPosX(RIGHT)+8, GetScreenHeight()-offsetY*5, smallBoxWidth-16, standardHeight, "Start Solving"};
@@ -229,6 +261,11 @@ void Gui::Display() {
         if(SettingsVisible){
             DisplaySettingsWindow();
         }
+        if(ImpossibleMessageVisible){
+            // Showing on screen ALgorithm that failed Solving the maze
+            MazeButton.text = TextFormat("%s\n   IS UNABLE TO\nSOVLE THIS MAZE!", GetAlgorithmName(usedAlg));;
+            MazeButton.DisplayRectangle(RED);
+        }
     }else if(choosenAlgorithm != Algorithm::None){  //generating or solving -> CANCEL
         if(MazeButton.IsHovered()){
             if(SettingsDescDisplayDelay == -1){
@@ -245,6 +282,9 @@ void Gui::Display() {
         if(MazeButton.IsClicked()){
             choosenAlgorithm = Algorithm::None;
             ButtonsReadyToClick = true;
+        }
+        if(!ImpossibleMessageVisible){
+            usedAlg = ChosenSolve.alg;
         }
     }
 }
@@ -355,26 +395,54 @@ void Gui::DisplaySettingsWindow() {
     float titlePosX = GetRectPosX(CENTER) + offsetX * 5;
     float descPosX = GetRectPosX(CENTER) + offsetX * 8;
     //Centered Window Title:
-    DrawText("Settings", GetRectPosX(CENTER) + (GetRectArea(CENTER).x - MeasureText("Settings", fontSize))/2, GetRectPosY(CENTER) + offsetY, fontSize, WHITE);
+    DrawText("Settings", GetRectPosX(CENTER) + (GetRectArea(CENTER).x - MeasureText("Settings", fontSize))/2, GetRectPosY(CENTER) + offsetY*1.5f, fontSize, WHITE);
 
-
-    DrawText("Grid:", titlePosX, offsetY * 12, fontSize, WHITE);
-    DrawText("Number of Rows:", descPosX, offsetY*15, fontSize, WHITE);
-    gridRowsInput.Update(descPosX+MeasureText("Number of Columns:", fontSize)+offsetX*3, offsetY * 15, offsetX * 5.6f, offsetY * 3);
+    DrawText("Maze:", titlePosX, offsetY*8, fontSize, WHITE);
+    
+    DrawText("Number of Rows:", descPosX, offsetY*11, fontSize, WHITE);
+    gridRowsInput.Update(descPosX+MeasureText("Number of Columns:", fontSize)+offsetX*3, offsetY*10.5f, offsetX * 5.6f, offsetY * 3);
     gridRowsInput.Display();
 
-    DrawText("Number of Columns:", descPosX, offsetY*19.5f, fontSize, WHITE);
-    gridColumnsInput.Update(descPosX+MeasureText("Number of Columns:", fontSize)+offsetX*3, offsetY * 19.5f, offsetX * 5.6f, offsetY * 3);
+    DrawText("Number of Columns:", descPosX, offsetY*14.5f, fontSize, WHITE);
+    gridColumnsInput.Update(descPosX+MeasureText("Number of Columns:", fontSize)+offsetX*3, offsetY*14, offsetX * 5.6f, offsetY * 3);
     gridColumnsInput.Display();
+    
+
+    if(tempCols != gridColumnsInput.value || tempStartC != mazeStartCol || tempExitC != mazeExitCol){
+        tempCols = gridColumnsInput.value;
+
+        tempStartC = mazeStartCol;
+        tempExitC = mazeExitCol;
+
+        int colInputLimit=1;
+        if(gridColumnsInput.value >= 10){
+            colInputLimit++;
+        }
+        if(gridColumnsInput.value >= 100){
+            colInputLimit++;
+        }
+
+        this->startColInput = InputBox(1, gridColumnsInput.value, tempStartC+1, colInputLimit);
+        this->exitColInput = InputBox(1, gridColumnsInput.value, tempExitC+1, colInputLimit);
+    }
+
+    DrawText("Start Position:", descPosX, offsetY*20, fontSize, WHITE);
+    startColInput.Update(descPosX+MeasureText("Start Position:", fontSize)+offsetX*3, offsetY*19.5f, offsetX * 5.6f, offsetY * 3);
+    startColInput.Display();
+
+    DrawText("Exit Position:", descPosX, offsetY*23.5f, fontSize, WHITE);
+    exitColInput.Update(descPosX+MeasureText("Start Position:", fontSize)+offsetX*3, offsetY*23, offsetX * 5.6f, offsetY * 3);
+    exitColInput.Display();
 
 
-    DrawText("Visualization Speed:", titlePosX, offsetY * 25, fontSize, WHITE);
-    DrawText("Steps per Second:", descPosX, offsetY*28, fontSize, WHITE);
-    vSpeedInput.Update(descPosX+MeasureText("Number of Columns:", fontSize)+offsetX*4, offsetY * 28, offsetX * 4.6f, offsetY * 3);
+    
+    DrawText("Visualization Speed:", titlePosX, offsetY*31, fontSize, WHITE);
+    DrawText("Steps per Second:", descPosX, offsetY*34.5f, fontSize, WHITE);
+    vSpeedInput.Update(descPosX+MeasureText("Number of Columns:", fontSize)+offsetX*4, offsetY*34, offsetX * 4.6f, offsetY * 3);
     vSpeedInput.Display();
 
     bool correctInputs = false;
-    if(gridRowsInput.correctValue && gridColumnsInput.correctValue && vSpeedInput.correctValue){
+    if(gridRowsInput.correctValue && gridColumnsInput.correctValue && vSpeedInput.correctValue && startColInput.correctValue && exitColInput.correctValue){
         correctInputs = true;
     }
 
@@ -396,6 +464,10 @@ void Gui::DisplaySettingsWindow() {
         //get values and change settings 
         mazeGridHeight = gridRowsInput.value;
         mazeGridWidth = gridColumnsInput.value;
+
+        mazeStartCol = startColInput.value-1;
+        mazeExitCol = exitColInput.value-1;
+
         visualizationSpeed = vSpeedInput.value;
     }
 }

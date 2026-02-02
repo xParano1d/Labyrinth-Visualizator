@@ -1,16 +1,16 @@
 #include "DeadEndFiller.h"
 
-int DeadEndFiller::getwallCount(int row, int col, Maze& maze) {
+int DeadEndFiller::getWallCount(int row, int col, Maze& maze) {
     //check wall count for current cell
     int wallCount = maze.grid[row][col].wallCount();
     //add visited neighbours that are connected as a wallcount
     vector<Maze::Direction> v = maze.VisitedNeighbours(row, col);
-    for(Maze::Direction p : v){
+    for(Maze::Direction d : v){
         int neighbourRow = row;
         int neighbourCol = col;
         bool validNeighbour = false;
         
-        switch (p){
+        switch (d){
             case Maze::Direction::LEFT:
                 neighbourCol--;
                 if(!maze.grid[row][col].leftWall && !maze.grid[neighbourRow][neighbourCol].rightWall){
@@ -64,7 +64,7 @@ void DeadEndFiller::Solve(Maze &maze) {
                 for (int j = 0; j < (int)maze.grid[0].size(); j++){
                     if (!maze.grid[i][j].visited) { //already blocked?
                         //check wall count for current cell
-                        wallCount = getwallCount(i, j, maze);
+                        wallCount = getWallCount(i, j, maze);
 
                         if(wallCount == 3){
                             Maze::CellPosition pos = {i, j};
@@ -87,6 +87,7 @@ void DeadEndFiller::Solve(Maze &maze) {
             if(deadEnd.empty()){
                 currentCell = startCell;
                 Filled = true;
+                maze.grid[startCell.row][startCell.col].visited = true;
             }
         }else{
             currentCell = deadEnd.back();
@@ -94,12 +95,12 @@ void DeadEndFiller::Solve(Maze &maze) {
             
             //and its neighbours (until we get to hallway)
             vector<Maze::Direction> v = maze.UnvisitedNeighbours(currentCell);
-            for(Maze::Direction p : v){
+            for(Maze::Direction d : v){
                 int neighbourRow = currentCell.row;
                 int neighbourCol = currentCell.col;
                 bool validNeighbour = false;
 
-                switch (p){
+                switch (d){
                     case Maze::Direction::LEFT:
                         neighbourCol--;
                         if(!maze.grid[currentCell.row][currentCell.col].leftWall && !maze.grid[neighbourRow][neighbourCol].rightWall){
@@ -129,7 +130,7 @@ void DeadEndFiller::Solve(Maze &maze) {
                     break;
                 }
                 if(validNeighbour){
-                    wallCount = getwallCount(neighbourRow, neighbourCol, maze);
+                    wallCount = getWallCount(neighbourRow, neighbourCol, maze);
                     //still dead end?
                     if(wallCount == 3){
                         // visit
@@ -142,7 +143,6 @@ void DeadEndFiller::Solve(Maze &maze) {
             }
         }
         
-        
     }else{
         //Trace path after filling
         if(currentCell!=exitCell){
@@ -150,6 +150,10 @@ void DeadEndFiller::Solve(Maze &maze) {
             //where can i go?
             vector<Maze::Direction> v = maze.UnvisitedNeighbours(currentCell);
             while(neighbourCell==currentCell){
+                if (v.empty()) {
+                    maze.Impossible = true;
+                    break; 
+                }
 
                 switch (v.back()){
                     case Maze::Direction::LEFT:
@@ -187,8 +191,6 @@ void DeadEndFiller::Solve(Maze &maze) {
             //add path to stack
             maze.solvePath.push_back({currentCell, neighbourCell});
             currentCell = neighbourCell;
-
-
         }else{
             //path done:
             maze.Solved = true;

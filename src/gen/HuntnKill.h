@@ -14,6 +14,6 @@ class HuntnKill {
 
         static void Hunt(Maze& maze);
     public:
-        static void Init(int startingRow, int startingCol, Maze &maze);
+        static void Init(int startRow, int startCol, Maze &maze);
         static void Generate(Maze& maze);
 };

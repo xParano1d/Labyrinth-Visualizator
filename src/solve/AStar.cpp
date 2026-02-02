@@ -61,12 +61,12 @@ void AStar::Solve(Maze &maze) {
             vector<Maze::Direction> n = maze.Neighbours(currentCell);
 
             int tempG = G[currentCell.row][currentCell.col] + 1;
-            for(Maze::Direction p : n){
+            for(Maze::Direction d : n){
                 int neighbourRow = currentCell.row;
                 int neighbourCol = currentCell.col;
                 bool validNeighbour = false;
 
-                switch (p){
+                switch (d){
                     case Maze::Direction::LEFT:
                         neighbourCol--;
                         if(!maze.grid[currentCell.row][currentCell.col].leftWall && !maze.grid[neighbourRow][neighbourCol].rightWall){
@@ -124,5 +124,7 @@ void AStar::Solve(Maze &maze) {
             //move closer to starting Cell
             cursor = parentCell;
         }
+    }else{
+        maze.Impossible = true;
     }
 }

@@ -1,4 +1,4 @@
-# Labyrinth-Visualizator
+# Maze-Visualizator
 Raylib C++ simple program for generating and solving labyrinths using different algorithms.
 
 TODO:
@@ -7,6 +7,7 @@ TODO:
         ✔ step by step algorithms displaying @done (12/9/2025, 10:38:31 PM)
         ✔ Gui Settings (window size, maximize, grid size, speed, etc.) @done (1/31/2026, 4:34:53 AM)
         ☐ Gui Slider for Settings
+        ☐ Settings Change Perfect Maze to Braid Maze (Toggle) Button 
         ✔ Gui Gen time @done (11/11/2025, 7:22:08 PM)
         ✔ Gui Gen iterations @done (11/11/2025, 7:22:12 PM)
         ✔ Gui Solve time @done (12/14/2025, 8:02:50 PM)
@@ -23,7 +24,7 @@ TODO:
             ✔ Kruskal @done (12/14/2025, 12:22:27 AM)
             ✔ Eller? @done (1/22/2026, 6:46:31 PM)
             ☐ Sidewinder
-            ☐ Random Grid
+            ✔ Random Grid @done (2/1/2026, 10:07:33 PM)
 
         Solve:
             ✔ Wall Follower @done (12/27/2025, 7:27:26 PM)

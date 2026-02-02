@@ -8,6 +8,28 @@ void Maze::ClearSolution() {
     deadEndPath.clear();
 }
 
+void Maze::ClearWalls() {
+    for (int i = 0; i < rows; i++){
+        for (int j = 0; j < columns; j++){
+            grid[i][j].rightWall = false;
+            grid[i][j].leftWall = false;
+            grid[i][j].topWall = false;
+            grid[i][j].bottomWall = false;
+
+            if(i==0){
+                grid[i][j].topWall = true;
+            }else if(i==rows-1){
+                grid[i][j].bottomWall = true;
+            }
+            if(j==0){
+                grid[i][j].leftWall = true;
+            }else if(j==columns-1){
+                grid[i][j].rightWall = true;
+            }
+        }
+    }
+}
+
 void Maze::CreateEmpty(int rows, int columns) {
     this->rows = rows;
     this->columns = columns;
@@ -22,9 +44,6 @@ void Maze::CreateEmpty(int rows, int columns) {
         }
     }
 
-    this->grid[0][0].topWall = false;
-    this->grid[rows-1][columns-1].bottomWall = false;
-
     Generated = false;
 
     Solved = false;
@@ -32,12 +51,19 @@ void Maze::CreateEmpty(int rows, int columns) {
     deadEndPath.clear();
 
     highlightRowEnabled = false;
+    
+    prevStartPosition = {-1, -1}; 
+    prevExitPosition = {-1, -1};
 }
 
 void Maze::ChangeEveryCellColor(Color c) {
     for (int i = 0; i < rows; i++){
         for (int j = 0; j < columns; j++){
-            this->grid[i][j].color = c;
+            if(this->grid[i][j].wallCount() < 4){
+                this->grid[i][j].color = c;
+            }else{
+                this->grid[i][j].color = BLACK;
+            }
         }
     }
 }
@@ -84,7 +110,7 @@ void Maze::UnvisitEveryCell() {
     }
 }
 
-void Maze::Display() {
+void Maze::Display(CellPosition startPosition, CellPosition exitPosition) {
     float centerX = (float)GetScreenWidth() / 2;
     float centerY = (float)GetScreenHeight() / 2;
     float aspectRatio = (float)GetScreenWidth() / (float)GetScreenHeight();
@@ -101,7 +127,7 @@ void Maze::Display() {
     float posY = centerY - height/2;
 
 
-    float wallThickness = fmax(2.0f, fmin(cellSize * 0.1f, 6.0f));
+    float wallThickness = fmax(3.0f, fmin(cellSize * 0.1f, 6.0f));
     float borderThickness = wallThickness+3*aspectRatio;
 
     //? Background of a Grid
@@ -125,20 +151,38 @@ void Maze::Display() {
     posX = startPosX;
     posY = startPosY;
 
+    //removing wall on top and bottom of maze grid to create entrance and exit
+    if (Generated) {
+        if (prevStartPosition.row >= 0 && prevStartPosition.row < rows && 
+            prevStartPosition.col >= 0 && prevStartPosition.col < columns) {
+            grid[prevStartPosition.row][prevStartPosition.col].topWall = true;
+        }
+        if (prevExitPosition.row >= 0 && prevExitPosition.row < rows && 
+            prevExitPosition.col >= 0 && prevExitPosition.col < columns) {
+            grid[prevExitPosition.row][prevExitPosition.col].bottomWall = true;
+        }
+
+        grid[startPosition.row][startPosition.col].topWall = false;
+        grid[exitPosition.row][exitPosition.col].bottomWall = false;
+
+        prevStartPosition = startPosition;
+        prevExitPosition = exitPosition;
+    }
+
     for (int i = 0; i < this->rows; i++){
         for (int j = 0; j < this->columns; j++){
             //* Drawing Walls
             if(this->grid[i][j].rightWall){
-                DrawRectangle(posX+offsetX-wallThickness/2, posY-wallThickness/2, wallThickness, offsetY+wallThickness, BLACK);   //! Right Wall
+                DrawRectangle(posX+offsetX-wallThickness/2, posY-wallThickness/2, wallThickness, offsetY+wallThickness, BLACK);         //! Right Wall
             }
             if(this->grid[i][j].leftWall){
-                DrawRectangle(posX-wallThickness/2, posY-wallThickness/2, wallThickness, offsetY + wallThickness, BLACK);           //! Left Wall
+                DrawRectangle(posX-wallThickness/2, posY-wallThickness/2, wallThickness, offsetY + wallThickness, BLACK);               //! Left Wall
             }
             if(this->grid[i][j].topWall){
                 DrawRectangle(posX-wallThickness/2, posY-wallThickness/2, offsetX + wallThickness, wallThickness, BLACK);           //! Top Wall
             }
             if(this->grid[i][j].bottomWall){
-                DrawRectangle(posX-wallThickness/2, posY + offsetY-wallThickness/2, offsetX + wallThickness, wallThickness, BLACK);   //! Bottom Wall
+                DrawRectangle(posX-wallThickness/2, posY + offsetY-wallThickness/2, offsetX + wallThickness, wallThickness, BLACK); //! Bottom Wall
             }
             
             posX = posX + offsetX;
@@ -153,10 +197,14 @@ void Maze::Display() {
     float cellCenterX = offsetX / 2;
     float cellCenterY = offsetY / 2;
 
-    float pathThickness = wallThickness*2;
+    float pathThickness = wallThickness*1.4f;
 
     //Drawing Solution
     if(!solvePath.empty()){     //* Green Path (Solution)
+        //* two Green lines
+        //* 1.  from    the top edge of maze   to   the starting point of path
+        DrawLineEx({posX+offsetX*startPosition.col + cellCenterX, posY+offsetY*startPosition.row}, {posX+offsetX*startPosition.col + cellCenterX, posY+offsetY*startPosition.row + cellCenterY}, pathThickness, {27, 227, 84, 255});
+
         for(Section sect : solvePath){
     
             float AX = posX + cellCenterX + sect.A.col * offsetX;
@@ -168,12 +216,9 @@ void Maze::Display() {
             DrawLineEx({AX, AY}, {BX, BY}, pathThickness, {27, 227, 84, 255});
         }
     }
-    if(Solved){     //* two Green lines
-        //*     from    the top edge of maze   to   the starting point of path
-        DrawLineEx({posX+cellCenterX, posY}, {posX+cellCenterX, posY+cellCenterY}, pathThickness, {27, 227, 84, 255});
-
-        //*     from    ending point of path   to   the bottom edge of maze
-        DrawLineEx({posX+width-cellCenterX, posY+height}, {posX+width-cellCenterX, posY+height-cellCenterY}, pathThickness, {27, 227, 84, 255});
+    if(Solved){
+        //* 2.  from    ending point of path   to   the bottom edge of maze
+        DrawLineEx({posX+offsetX*exitPosition.col + cellCenterX, posY+offsetY*exitPosition.row + cellCenterY}, {posX+offsetX*exitPosition.col + cellCenterX, posY+offsetY*exitPosition.row + 2*cellCenterY}, pathThickness, {27, 227, 84, 255});
     }
 
     if(!deadEndPath.empty()){   //Grey Path

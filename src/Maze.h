@@ -11,6 +11,7 @@ class Maze {
         int columns;
         bool Generated;
         bool Solved;
+        bool Impossible;
 
         struct CellPosition {
             int row;
@@ -32,6 +33,7 @@ class Maze {
         vector<Section> solvePath;
         vector<Section> deadEndPath;
         void ClearSolution();
+        void ClearWalls();
 
         enum Direction {
             LEFT,
@@ -71,7 +73,7 @@ class Maze {
         vector<vector<Cell>> grid;
         
         void CreateEmpty(int rows, int columns);
-        void Display();
+        void Display(CellPosition startPosition = {-1, -1}, CellPosition exitPosition = {-1, -1});
         
         void ChangeEveryCellColor(Color c);
         void HighlightRow(int row, Color c);
@@ -95,6 +97,9 @@ class Maze {
 
         bool highlightRowEnabled = false;
     private:
+        CellPosition prevStartPosition = {0, 0};
+        CellPosition prevExitPosition = {0, 0};
+
         int highlightedRow;
         Color highlightColor = {};
 };

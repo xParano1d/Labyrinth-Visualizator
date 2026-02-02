@@ -9,7 +9,7 @@ class DeadEndFiller {
     inline static vector<Maze::CellPosition> deadEnd;
     inline static Maze::CellPosition currentCell;
     
-    static int getwallCount(int row, int col, Maze &maze);
+    static int getWallCount(int row, int col, Maze &maze);
 
     inline static bool Filled;
     public:

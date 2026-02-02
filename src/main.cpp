@@ -7,6 +7,8 @@
 #include "./gen/Prim.h"
 #include "./gen/Kruskal.h"
 #include "./gen/Eller.h"
+#include "./gen/Sidewinder.h"
+#include "./gen/Random.h"
 
 #include "./solve/WallFollower.h"
 #include "./solve/DepthFirstSearch.h"
@@ -17,44 +19,55 @@
 
 int main() {
     SetConfigFlags(FLAG_WINDOW_HIDDEN);
-    InitWindow(800, 600, "Labyrinths Visualization");
-    Image icon = LoadImage("./icon/icon.png");
-    // SetWindowMonitor(1);
-    SetWindowIcon(icon);
-    UnloadImage(icon);
-    int currentMonitor = GetCurrentMonitor();
+    InitWindow(800, 600, "Maze Visualizator");
     
+    //ICON:
+    Image icon = LoadImage("./icon/icon.png");
+    Image icon16 = ImageCopy(icon);
+    ImageResize(&icon16, 16, 16);
+    Image icon32 = ImageCopy(icon);
+    ImageResize(&icon32, 32, 32);
+    
+    Image icons[3] = {icon, icon32, icon16};
+    
+    SetWindowIcons(icons, 3);
+    UnloadImage(icon);
+    UnloadImage(icon16);
+    UnloadImage(icon32);
+
+
+    int currentMonitor = GetCurrentMonitor();
     SetTargetFPS(GetMonitorRefreshRate(currentMonitor));
     SetRandomSeed((unsigned int)time(NULL));
     
     //*---SETTINGS---*
     //*Screen:
-    int screenWidth = GetMonitorWidth(currentMonitor) / 1.6;
-    int screenHeight = GetMonitorHeight(currentMonitor) / 1.6;
+    int screenWidth = GetMonitorWidth(currentMonitor) / 1.4;
+    int screenHeight = GetMonitorHeight(currentMonitor) / 1.4;
 
     //*Maze:
     //Grid Size:
-    int gridWidth = 10;     // rows
-    int gridHeight = 10;    // columns
+    int gridHeight = 10;    // rows
+    int gridWidth = 10;     // columns
 
-    //Starting Position for Solving
-    int startingRow = 0;
-    int startingCol = 0;
+    //Start Position
+    int startRow = 0;   //!DO NOT CHANGE: it should just be *0* for maze with top entrance and bottom exit
+    int startCol = 0;
 
-    //Exit 
-    int exitRow = gridHeight-1;
+   //Exit Position
+    int exitRow = gridHeight-1; //!DO NOT CHANGE: it should just be *gridHeight-1* for maze with top entrance and bottom exit
     int exitCol = gridWidth-1;
     
     //*Visualization:
     //Speed (in algorithm steps per second)
-    float vSpeed = 6;  //(1-10) | higher value -> faster
+    float vSpeed = 10;  //(1-10) | higher value -> faster
 
     
     SetWindowSize(screenWidth, screenHeight);
     SetWindowPosition((GetMonitorWidth(currentMonitor) - screenWidth) / 2, (GetMonitorHeight(currentMonitor) - screenHeight) / 2);
     ClearWindowState(FLAG_WINDOW_HIDDEN);
 
-    Gui gui(gridHeight, gridWidth, vSpeed);
+    Gui gui(gridHeight, gridWidth, startCol, exitCol, vSpeed);
     Maze maze;
 
     double time;
@@ -68,6 +81,7 @@ int main() {
     int tempW = 0;
     int tempH = 0;
     float tempVSpeed = 0;
+    bool RandomMaze = false;
 
     while (!WindowShouldClose()) {
         dt = GetFrameTime();
@@ -78,14 +92,14 @@ int main() {
         if(tempH!=gridHeight || tempW!=gridWidth){
             tempW = gridWidth;
             tempH = gridHeight;
-            
-            exitRow = gridHeight-1;
-            exitCol = gridWidth-1;
-            
+
+            exitRow = gridHeight - 1;
+
             maze.CreateEmpty(gridHeight, gridWidth);
             gui.ReadytoSolve = false;
             tempVSpeed = 0;
         }
+        
         if(tempVSpeed!=vSpeed){
             float targetDuration = 60 * pow(0.5, vSpeed - 1);   //The "Halving" Formula
             stepDelay = targetDuration / (gridWidth*gridHeight);//Grid Size should be considered too
@@ -100,74 +114,85 @@ int main() {
             
             switch(gui.choosenAlgorithm){
                 case (Gui::Algorithm::Backtracking): //DFS (gen)
-                maze.CreateEmpty(gridHeight, gridWidth);
-                Backtracking::Init(startingRow, startingCol, maze);
-                algType = true;
+                    maze.CreateEmpty(gridHeight, gridWidth);
+                    Backtracking::Init(startRow, startCol, maze);
+                    algType = true;
                 break;
                 
                 case (Gui::Algorithm::HuntNKill):
-                maze.CreateEmpty(gridHeight, gridWidth);
-                HuntnKill::Init(startingRow, startingCol, maze);
-                algType = true;
+                    maze.CreateEmpty(gridHeight, gridWidth);
+                    HuntnKill::Init(startRow, startCol, maze);
+                    algType = true;
                 break;
                 
                 case (Gui::Algorithm::Prim):
-                maze.CreateEmpty(gridHeight, gridWidth);
-                Prim::Init(startingRow, startingCol, maze);
-                algType = true;
+                    maze.CreateEmpty(gridHeight, gridWidth);
+                    Prim::Init(startRow, startCol, maze);
+                    algType = true;
                 break;
                 
                 case (Gui::Algorithm::Kruskal): //Randomized* Kruskal
-                maze.CreateEmpty(gridHeight, gridWidth);
-                Kruskal::Init(maze);
-                gui.genIterations--;
-                algType = true;
+                    maze.CreateEmpty(gridHeight, gridWidth);
+                    Kruskal::Init(maze);
+                    algType = true;
                 break;
                 
                 case (Gui::Algorithm::Eller):
-                maze.CreateEmpty(gridHeight, gridWidth);
-                Eller::Init(maze);
-                gui.genIterations--;
-                algType = true;
+                    maze.CreateEmpty(gridHeight, gridWidth);
+                    Eller::Init(maze);
+                    algType = true;
                 break;
-                
-                
+
+                case (Gui::Algorithm::Sidewinder):
+                    maze.CreateEmpty(gridHeight, gridWidth);
+                    Sidewinder::Init(maze);
+                    algType = true;
+                break;
+
+                case (Gui::Algorithm::Random):
+                    maze.CreateEmpty(gridHeight, gridWidth);
+                    Random::Init(startRow, startCol, exitRow, exitCol, maze);
+                    algType = true;
+                break;
+
                 case (Gui::Algorithm::None):
                 break;
                 
                 
                 case (Gui::Algorithm::WallFollower):
-                WallFollower::Init(startingRow, startingCol, maze);
-                algType = false;
+                    WallFollower::Init(startRow, startCol, exitRow, exitCol, maze);
+                    algType = false;
                 break;
                 
                 case (Gui::Algorithm::DepthFirstSearch):
-                DepthFirstSearch::Init(startingRow, startingCol, exitRow, exitCol, maze);
-                algType = false;
+                    DepthFirstSearch::Init(startRow, startCol, exitRow, exitCol, maze);
+                    algType = false;
                 break;
                 
-                case (Gui::Algorithm::BreadthFirstSearch):
-                BreadthFirstSearch::Init(startingRow, startingCol, exitRow, exitCol, maze);
-                algType = false;
+                case (Gui::Algorithm::BreadthFirstSearch):  //Flood Fill
+                    BreadthFirstSearch::Init(startRow, startCol, exitRow, exitCol, maze);
+                    algType = false;
                 break;
                 
                 case (Gui::Algorithm::DeadEndFiller):
-                DeadEndFiller::Init(startingRow, startingCol, exitRow, exitCol, maze);
-                algType = false;
+                    DeadEndFiller::Init(startRow, startCol, exitRow, exitCol, maze);
+                    algType = false;
                 break;
                 
                 case (Gui::Algorithm::AStar):
-                AStar::Init(startingRow, startingCol, exitRow, exitCol, maze);
-                algType = false;
+                    AStar::Init(startRow, startCol, exitRow, exitCol, maze);
+                    algType = false;
                 break;
                 
-                case (Gui::Algorithm::Tremaux):
-                algType = false;
-                break;
+                // case (Gui::Algorithm::Tremaux):
+                //     algType = false;
+                // break;
             }
             
             if(!gui.ButtonsReadyToClick){
                 if(algType){        //GENERATION
+                    RandomMaze = (gui.choosenAlgorithm == Gui::Algorithm::Random);
+
                     gui.genIterations = 0;
                     gui.genIterations++;
                     
@@ -176,7 +201,7 @@ int main() {
                     
                 }else{              //SOLVING
                     maze.ClearSolution();
-                    
+
                     gui.solveIterations = 0;
                     gui.solveIterations++;
                     
@@ -195,72 +220,92 @@ int main() {
             }else{
                 maze.highlightRowEnabled = false;
             }
-
             time += dt;
             while(time >= stepDelay){
                 time -= stepDelay;
                 switch (gui.choosenAlgorithm){
                     case (Gui::Algorithm::Backtracking):
-                    Backtracking::Generate(maze);
+                        Backtracking::Generate(maze);
                     break;
                     
                     case (Gui::Algorithm::HuntNKill):
-                    HuntnKill::Generate(maze);
+                        HuntnKill::Generate(maze);
                     break;
                     
                     case (Gui::Algorithm::Prim):
-                    Prim::Generate(maze);
+                        Prim::Generate(maze);
                     break;
                     
                     case (Gui::Algorithm::Kruskal):
-                    Kruskal::Generate(maze);
+                        Kruskal::Generate(maze);
                     break;
                     
                     case (Gui::Algorithm::Eller):
-                    Eller::Generate(maze);
+                        Eller::Generate(maze);
                     break;
-                    
-                    
+
+                    case (Gui::Algorithm::Sidewinder):
+                        Sidewinder::Generate(maze);
+                    break;
+
+                    case (Gui::Algorithm::Random):
+                        Random::Generate(maze);
+                    break;
+
+
                     case (Gui::Algorithm::None):
                     break;
                     
                     
                     case (Gui::Algorithm::WallFollower):
-                    WallFollower::Solve(maze);
+                        if(gui.solveIterations>1){
+                            WallFollower::Solve(maze);
+                        }
                     break;
                     
                     case (Gui::Algorithm::DepthFirstSearch):
-                    DepthFirstSearch::Solve(maze);
+                        DepthFirstSearch::Solve(maze);
                     break;
                     
                     case (Gui::Algorithm::BreadthFirstSearch):
-                    BreadthFirstSearch::Solve(maze);
+                        BreadthFirstSearch::Solve(maze);
                     break;
                     
                     case (Gui::Algorithm::DeadEndFiller):
-                    DeadEndFiller::Solve(maze);
+                        DeadEndFiller::Solve(maze);
                     break;
                     
                     case (Gui::Algorithm::AStar):
-                    AStar::Solve(maze);
+                        AStar::Solve(maze);
                     break;
                     
-                    case (Gui::Algorithm::Tremaux):
-                    maze.Solved = true;
-                    break;
+                    // case (Gui::Algorithm::Tremaux):
+                    //     maze.Solved = true;
+                    // break;
                 }
                 
-                //if        generated          or            solved
-                if((maze.Generated && algType) || (maze.Solved && !algType)){
+                //if        Generated          or            Solved          or            Impossible
+                if((maze.Generated && algType) || (maze.Solved && !algType) || (maze.Impossible && !algType)){
                     gui.ReadytoSolve = maze.Generated;
                     gui.choosenAlgorithm = Gui::Algorithm::None;
 
-                    if((GetTime()-genTime>1 && algType)||(GetTime()-solveTime>1 && !algType)){
-                        maze.ChangeEveryCellColor(WHITE);
+                    if((GetTime()-genTime>1 && algType) || (GetTime()-solveTime>1 && !algType && !maze.Impossible)){
+                        if(!RandomMaze){
+                            maze.ChangeEveryCellColor(WHITE);
+                        }
                         gui.ButtonsReadyToClick = true;
-
                         time = 0;
                         break;
+                    }else if(maze.Impossible && !maze.Solved && !algType){
+                        if(GetTime()-solveTime>2  && !algType){
+                            gui.ButtonsReadyToClick = true;
+                            gui.ImpossibleMessageVisible = false;
+                            maze.Impossible = false;
+                            time = 0;
+                            break;
+                        }else{
+                            gui.ImpossibleMessageVisible = true;
+                        }
                     }
                 }else if(gui.choosenAlgorithm != Gui::Algorithm::None){
                     if(algType){
@@ -273,12 +318,11 @@ int main() {
                 }
             }
         }
-        
-        
-        maze.Display();
+
+        maze.Display({startRow, startCol}, {exitRow, exitCol});
         gui.Display();
         
-        DrawText("Prosze polaczycv sie z nigga AI", screenWidth/3+10, 13, 20, GREEN); //! zapytanie o polaczenie z nigga ai
+        // DrawText("Prosze polaczycv sie z nigga AI", screenWidth/3+10, 13, 20, GREEN); //! zapytanie o polaczenie z nigga ai
         EndDrawing();
     }
 

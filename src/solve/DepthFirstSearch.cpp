@@ -94,5 +94,7 @@ void DepthFirstSearch::Solve(Maze &maze) {
             //move closer to starting Cell
             cursor = parentCell;
         }
+    }else{
+        maze.Impossible = true;
     }
 }

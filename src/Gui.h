@@ -3,14 +3,21 @@
 #include <raylib.h>
 #include <vector>
 #include <cmath>
-#include <iostream>
 using std::vector;
 
 class Gui {
     private:
         int &mazeGridWidth;
         int &mazeGridHeight;
+
+        int &mazeStartCol;
+        int &mazeExitCol;
+
         float &visualizationSpeed;
+
+        int tempCols;
+        int tempStartC;
+        int tempExitC;
 
         float offsetX;
         float offsetY;
@@ -40,7 +47,7 @@ class Gui {
     public:
         void Display();
 
-        Gui(int &gridHeight, int &gridWidth, float &vSpeed) : mazeGridWidth(gridWidth), mazeGridHeight(gridHeight), visualizationSpeed(vSpeed) {
+        Gui(int &gridHeight, int &gridWidth, int &startCol, int &exitCol, float &vSpeed) : mazeGridWidth(gridWidth), mazeGridHeight(gridHeight), mazeStartCol(startCol), mazeExitCol(exitCol), visualizationSpeed(vSpeed) {
             Init();
         };
 
@@ -62,9 +69,10 @@ class Gui {
             DeadEndFiller,
             DepthFirstSearch,
             AStar,
-            Tremaux
+            // Tremaux
         };
         Algorithm choosenAlgorithm;
+        const char *GetAlgorithmName(Gui::Algorithm alg);
 
         double genTime = 0;
         int genIterations = 0;
@@ -74,9 +82,12 @@ class Gui {
 
         bool ButtonsReadyToClick = true;
         bool ReadytoSolve = false;
-        Algorithm MainButtonHandler();
 
-        
+        bool ImpossibleMessageVisible = false;
+        Algorithm usedAlg;
+
+        Algorithm MainButtonHandler();
+         
     private:    
         Rectangle LeftContext;
         Rectangle CenterContext;
@@ -128,7 +139,7 @@ class Gui {
                 if(fontSize%2!=0){
                     fontSize += fontSize % 2;
                 }
-                DrawText(text, posX+width/2 - MeasureText(text, fontSize)/2+5, posY+height*0.26f-5, fontSize, textColor);
+                DrawText(text, posX+width/2 - MeasureText(text, fontSize)/2+4, posY+height*0.26f+4, fontSize, textColor);
                 DrawText(text, posX+width/2 - MeasureText(text, fontSize)/2, posY+height*0.26f, fontSize, textHighlight);
             }
             void ChangeColor(Color buttonC, Color textC){
@@ -165,14 +176,14 @@ class Gui {
             void Input(){    
                 if(IsClicked() && !Active){
                     Active = true;
-                }else if((IsMouseButtonPressed(0) && Active) || !IsWindowFocused()){
+                }else if(((IsMouseButtonPressed(0) && !IsClicked())&& Active) || !IsWindowFocused()){
                     Active = false;
                 }
 
                 if(Active){
                     int textLength = TextLength(text);
                     int key = GetCharPressed();
-                    if((key >= '0' && key <= '9') && textLength <= maxlength){
+                    if((key >= '0' && key <= '9') && textLength < maxlength){
                         //Appending
                         char tempStr[2] = { (char)key, '\0' };
                         TextAppend(text, tempStr, &textLength);
@@ -186,7 +197,9 @@ class Gui {
                     }
                 }        
                 //replace text with value
-                TextCopy(text, TextFormat("%d", value));
+                if (!Active) {
+                    TextCopy(text, TextFormat("%d", value));
+                }
             }
             
             public:
@@ -197,7 +210,7 @@ class Gui {
                 this->min = min;
                 this->max = max;
                 this->outline = outline;
-                this->maxlength = maxLength-1;
+                this->maxlength = maxLength;
 
                 text[0] = '\0';
                 this->value = value;
@@ -237,7 +250,6 @@ class Gui {
                 if (Active && (int)(GetTime() * 2) % 2 == 0) {
                     DrawRectangle(posX + (width + textWidth)/2 + 2, posY + 5, 2, height - 10, BLACK);
                 }
-                //up and down buttons?????
             }
         };
 
@@ -246,6 +258,10 @@ class Gui {
 
         InputBox gridRowsInput;
         InputBox gridColumnsInput;
+
+        InputBox startColInput;
+        InputBox exitColInput;
+
         InputBox vSpeedInput;
 
         Button SaveSettings;

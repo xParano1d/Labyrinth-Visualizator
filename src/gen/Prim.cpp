@@ -12,7 +12,7 @@ void Prim::Init(int startingRow, int startingCol, Maze &maze) {
     maze.grid[startingRow][startingCol].color = {108, 117, 148, 255};
 
     //Add all valid neighbors of this cell to your Frontier List
-    frontierList = maze.GetUnvisitedNeighboursPosition(startingCol, startingRow);
+    frontierList = maze.GetUnvisitedNeighboursPosition(startingRow, startingCol);
     HighlightFrontier(maze);
 }
 
